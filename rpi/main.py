@@ -1,19 +1,23 @@
 import logging
-
 import cherrypy
 import serial
+import threading
+import time
 from Blind import Blind
 from BlindController import BlindController
 from BlindsController import BlindsController
-
+from Arduino import Arduino
+from cherrypy.process.plugins import Monitor
+from StopperCallback import StopperCallback
 
 if __name__ == '__main__':
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     ser = serial.Serial('/dev/ttyACM0', 9600)
+    arduino = Arduino()
 
-    blinds = [Blind('a', 'b', 'c', ser), Blind('b', 'd', 'e', ser)]
+    blinds = [Blind('a', 'b', 'c', ser, arduino), Blind('b', 'd', 'e', ser, arduino)]
 
     cherrypy.tree.mount(
         BlindController(blinds), '/api/blind',
@@ -28,5 +32,8 @@ if __name__ == '__main__':
         }
     )
 
+    Monitor(cherrypy.engine, StopperCallback(ser, arduino), frequency=1).subscribe()
+
     cherrypy.engine.start()
+
     cherrypy.engine.block()

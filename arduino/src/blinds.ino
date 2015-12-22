@@ -55,6 +55,8 @@ void Blind::pullUp(){
 void Blind::stop(){
   digitalWrite(firstOutputPin, LOW);
   digitalWrite(secondOutputPin, LOW);
+  delay(2500);
+  Serial.write("stopped\n");
 }
 
 Blind blindA = Blind(2, 3, 6, 7);

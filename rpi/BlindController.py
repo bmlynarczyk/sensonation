@@ -31,5 +31,6 @@ class BlindController:
                     return json.dumps(BlindView(blind.name).__dict__)
                 except ValueError:
                     cherrypy.response.status = 409
+                    return
         else:
             cherrypy.response.status = 404
