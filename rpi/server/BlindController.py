@@ -22,7 +22,7 @@ class BlindController(object):
             return self
         return vpath
 
-    def put(self, name, action_name):
+    def PUT(self, name, action_name):
         for blind in self.blinds:
             if blind.name == name:
                 try:

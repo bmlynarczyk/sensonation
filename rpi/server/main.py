@@ -1,5 +1,5 @@
-import Arduino
-import Blind
+from Arduino import Arduino
+from Blind import Blind
 from BlindController import BlindController
 from BlindsController import BlindsController
 import cherrypy

@@ -9,7 +9,7 @@ class BlindsController(object):
     def __init__(self, blinds):
         self.blinds = blinds
 
-    def get(self):
+    def GET(self):
         views = []
         for blind in self.blinds:
             views.append(BlindView(blind.name).__dict__)
