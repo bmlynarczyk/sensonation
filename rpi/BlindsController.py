@@ -1,17 +1,15 @@
-import json
 from BlindView import BlindView
+import json
 
-__author__ = 'bmlynarczyk'
 
-
-class BlindsController:
+class BlindsController(object):
 
     exposed = True
 
     def __init__(self, blinds):
         self.blinds = blinds
 
-    def GET(self):
+    def get(self):
         views = []
         for blind in self.blinds:
             views.append(BlindView(blind.name).__dict__)

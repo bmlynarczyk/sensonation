@@ -1,7 +1,4 @@
-__author__ = 'bmlynarczyk'
-
-
-class BlindView:
+class BlindView(object):
 
     def __init__(self, name):
         self.name = name

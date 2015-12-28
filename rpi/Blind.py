@@ -1,10 +1,9 @@
-__author__ = 'bmlynarczyk'
-
-import logging
 from ArduinoState import ArduinoState
+import logging
+import re
 
 
-class Blind:
+class Blind(object):
 
     def __init__(self, name, pull_down_code, pull_up_code, serial, arduino):
         self.name = name
@@ -22,7 +21,7 @@ class Blind:
         else:
             raise ValueError("blind is stopped")
 
-    def pullDown(self):
+    def pull_down(self):
         if(self.arduino.state == ArduinoState.READY_TO_GO):
             self.logger.debug("pull down %s" % self.name)
             self.serial.write(self.pull_down_code)
@@ -30,7 +29,7 @@ class Blind:
         else:
             raise ValueError("blind is moving")
 
-    def pullUp(self):
+    def pull_up(self):
         if(self.arduino.state == ArduinoState.READY_TO_GO):
             self.logger.debug("pull up %s" % self.name)
             self.serial.write(self.pull_up_code)
@@ -40,5 +39,10 @@ class Blind:
 
     def fire_action(self, action_name):
         self.logger.debug("call %s" % action_name)
+        action_name = self.convert_to_underscore(action_name)
         action_function = getattr(self, action_name)
         action_function()
+
+    def convert_to_underscore(self, name):
+        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()

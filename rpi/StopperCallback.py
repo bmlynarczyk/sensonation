@@ -1,7 +1,8 @@
-import logging
 from ArduinoState import ArduinoState
+import logging
 
-class StopperCallback:
+
+class StopperCallback(object):
 
     def __init__(self, serial, arduino):
         self.serial = serial
@@ -9,8 +10,8 @@ class StopperCallback:
         self.logger = logging.getLogger("StopperCallback")
 
     def __call__(self):
-        self.logger.debug("stopperHandler:arduino state is: %d" % self.arduino.state)
-        if self.arduino.state == ArduinoState.STOP_ONLY :
+        self.logger.debug("arduino state is: %d" % self.arduino.state)
+        if self.arduino.state == ArduinoState.STOP_ONLY:
             self.logger.debug("start waiting in stopperHandler")
             self.serial.readline()
             self.logger.debug("stop waiting in stopperHandler")

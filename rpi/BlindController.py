@@ -1,12 +1,12 @@
+from BlindView import BlindView
+import cherrypy
 import json
 import logging
-import cherrypy
-from BlindView import BlindView
 
 __author__ = 'bmlynarczyk'
 
 
-class BlindController:
+class BlindController(object):
 
     exposed = True
 
@@ -18,15 +18,15 @@ class BlindController:
         if len(vpath) == 3:
             cherrypy.request.params['name'] = vpath.pop(0)
             vpath.pop(0)
-            cherrypy.request.params['actionName'] = vpath.pop(0)
+            cherrypy.request.params['action_name'] = vpath.pop(0)
             return self
         return vpath
 
-    def PUT(self, name, actionName):
+    def put(self, name, action_name):
         for blind in self.blinds:
             if blind.name == name:
                 try:
-                    blind.fire_action(actionName)
+                    blind.fire_action(action_name)
                     cherrypy.response.status = 200
                     return json.dumps(BlindView(blind.name).__dict__)
                 except ValueError:
