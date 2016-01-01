@@ -21,7 +21,7 @@ class BlindController(object):
         return vpath
 
     def PUT(self, name, action_name):
-        for blind in self.blinds:
+        for blind in self.blinds.list:
             if blind.name == name:
                 try:
                     blind.fire_action(action_name)

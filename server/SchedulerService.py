@@ -12,6 +12,7 @@ class SchedulerService(object):
         self.arduino = arduino
         self.sun_service = SunSerivce()
         self.scheduler = scheduler
+        self.blinds = blinds
         self.init()
 
     def init(self):
@@ -38,14 +39,7 @@ class SchedulerService(object):
         self.scheduler.add_job(self.recalc_job, 'date', run_date=tommorow_1_am)
 
     def pull_down_job(self):
-        for blind in self.blinds:
-            blind.pullDown()
-            while self.arduino.state == ArduinoState.STOP_ONLY:
-                time.sleep(1)
-        self.recalc_job()
+        self.blinds.pull_down()
 
     def pull_up_job(self):
-        for blind in self.blinds:
-            blind.pullUp()
-            while self.arduino.state == ArduinoState.STOP_ONLY:
-                time.sleep(1)
+        self.blinds.pull_up()

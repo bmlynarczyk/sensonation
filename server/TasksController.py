@@ -15,6 +15,8 @@ class TasksController(object):
 
     def GET(self):
         views = []
-        for job in self.scheduler.get_jobs:
+        it = iter(self.scheduler.get_jobs())
+        for i in range(len(self.scheduler.get_jobs())):
+            job = it.next()
             views.append(JobView(job.id, job.name).__dict__)
         return json.dumps(views)
