@@ -7,6 +7,7 @@ from cherrypy.process.plugins import Monitor
 import logging
 import serial
 from StopperCallback import StopperCallback
+from TasksController import TasksController
 
 
 if __name__ == '__main__':
@@ -14,6 +15,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     ser = serial.Serial('/dev/ttyACM0', 9600)
+    # ser = Arduino
     arduino = Arduino()
 
     blinds = [
@@ -31,6 +33,11 @@ if __name__ == '__main__':
         '/api/blinds',
         {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}}
     )
+    # cherrypy.tree.mount(
+    #     TasksController(blinds, arduino),
+    #     '/api/tasks',
+    #     {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}}
+    # )
 
     Monitor(
         cherrypy.engine,

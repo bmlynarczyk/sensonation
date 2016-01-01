@@ -3,8 +3,6 @@ import cherrypy
 import json
 import logging
 
-__author__ = 'bmlynarczyk'
-
 
 class BlindController(object):
 
