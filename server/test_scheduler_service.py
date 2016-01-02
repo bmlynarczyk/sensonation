@@ -1,9 +1,9 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from Arduino import Arduino
+from api.Arduino import Arduino
 from dateutil import parser
 from freezegun import freeze_time
 from pytz import timezone
-from SchedulerService import SchedulerService
+from api.SchedulerService import SchedulerService
 
 warsaw = timezone('Europe/Warsaw')
 

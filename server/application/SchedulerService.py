@@ -1,7 +1,7 @@
-from ArduinoState import ArduinoState
+from domain.ArduinoState import ArduinoState
 import datetime
 import logging
-from SunService import SunSerivce
+from application.SunService import SunSerivce
 import time
 
 

@@ -1,4 +1,4 @@
-from ArduinoState import ArduinoState
+from domain.ArduinoState import ArduinoState
 
 
 class Arduino(object):

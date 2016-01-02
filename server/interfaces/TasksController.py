@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from JobView import JobView
+from interfaces.views.JobView import JobView
 import json
-from SchedulerService import SchedulerService
+from application.SchedulerService import SchedulerService
 
 
 class TasksController(object):

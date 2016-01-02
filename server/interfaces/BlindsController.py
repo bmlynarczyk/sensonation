@@ -1,4 +1,4 @@
-from BlindView import BlindView
+from interfaces.views.BlindView import BlindView
 import cherrypy
 import json
 

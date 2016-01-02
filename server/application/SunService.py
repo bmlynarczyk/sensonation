@@ -1,5 +1,5 @@
 from dateutil import parser
-import suncalc
+from infrastructure import suncalc
 
 
 class SunSerivce(object):

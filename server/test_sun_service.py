@@ -1,5 +1,5 @@
 from dateutil import parser
-from SunService import SunSerivce
+from api.SunService import SunSerivce
 
 
 def test_winter_sunrise_date_time():

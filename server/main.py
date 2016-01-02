@@ -1,14 +1,15 @@
-from Arduino import Arduino
-from Blinds import Blinds
-from BlindController import BlindController
-from BlindsController import BlindsController
+from application.StopperCallback import StopperCallback
+from domain.Arduino import Arduino
+from domain.Blinds import Blinds
 import cherrypy
 from cherrypy.process.plugins import Monitor
 import logging
+from interfaces.BlindController import BlindController
+from interfaces.BlindsController import BlindsController
+from interfaces.TasksController import TasksController
 import os
 import serial
-from StopperCallback import StopperCallback
-from TasksController import TasksController
+
 
 class Root(object):
     pass

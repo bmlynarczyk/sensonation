@@ -1,5 +1,5 @@
-from ArduinoState import ArduinoState
-from Blind import Blind
+from domain.ArduinoState import ArduinoState
+from domain.Blind import Blind
 import logging
 import re
 import time
