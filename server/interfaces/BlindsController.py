@@ -2,7 +2,6 @@ from interfaces.views.BlindView import BlindView
 import cherrypy
 import json
 
-
 class BlindsController(object):
 
     exposed = True
@@ -10,17 +9,20 @@ class BlindsController(object):
     def __init__(self, blinds):
         self.blinds = blinds
 
-    def _cp_dispatch(self, vpath):
-        if len(vpath) == 1:
-            cherrypy.request.params['action_name'] = vpath.pop(0)
-            return self
-        return vpath
-
     def GET(self):
         views = []
         for blind in self.blinds.list:
             views.append(BlindView(blind.name).__dict__)
         return json.dumps(views)
 
-    def PUT(self, action_name):
+    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    def PUT(self):
+        input_json = cherrypy.request.json
+        action_name = input_json['action_name']
         self.blinds.fire_action(action_name)
+
+    def OPTIONS(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+        cherrypy.response.headers["Access-Control-Allow-Methods"] = "PUT,GET"
+        cherrypy.response.headers["Access-Control-Allow-Headers"] = "Content-Type, Accept"

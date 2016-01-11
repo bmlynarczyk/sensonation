@@ -12,15 +12,12 @@ class BlindController(object):
         self.blinds = blinds
         self.logger = logging.getLogger("BlindController")
 
-    def _cp_dispatch(self, vpath):
-        if len(vpath) == 3:
-            cherrypy.request.params['name'] = vpath.pop(0)
-            vpath.pop(0)
-            cherrypy.request.params['action_name'] = vpath.pop(0)
-            return self
-        return vpath
-
-    def PUT(self, name, action_name):
+    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    def PUT(self):
+        input_json = cherrypy.request.json
+        name = input_json['name']
+        action_name = input_json['action_name']
         for blind in self.blinds.list:
             if blind.name == name:
                 try:
@@ -32,3 +29,8 @@ class BlindController(object):
                     return
         else:
             cherrypy.response.status = 404
+
+    def OPTIONS(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+        cherrypy.response.headers["Access-Control-Allow-Methods"] = "PUT"
+        cherrypy.response.headers["Access-Control-Allow-Headers"] = "Content-Type, Accept"
