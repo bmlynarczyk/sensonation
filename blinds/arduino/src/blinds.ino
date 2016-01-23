@@ -61,12 +61,11 @@ void Blind::stop(){
 
 Blind blindA = Blind(2, 3, 6, 7);
 Blind blindB = Blind(4, 5, 8, 9);
+Blind blindC = Blind(22, 24, 23, 25);
 
 void setup() {
   Serial.begin(9600);
 }
-
-int val = LOW;
 
 void loop(){
   if (Serial.available()) {
@@ -75,6 +74,7 @@ void loop(){
       case 97:
         blindA.stop();
         blindB.stop();
+        blindC.stop();
         break;
       case 98:
         blindA.pullDown();
@@ -87,6 +87,12 @@ void loop(){
         break;
       case 101:
         blindB.pullUp();
+        break;
+      case 102:
+        blindC.pullDown();
+        break;
+      case 103:
+        blindC.pullUp();
         break;
     }
   }
