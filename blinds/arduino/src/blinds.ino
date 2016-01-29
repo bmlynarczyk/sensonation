@@ -1,4 +1,4 @@
-zbyte number = 0;
+byte number = 0;
 
 void setup(){
 Serial.begin(9600);
