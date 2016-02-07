@@ -13,6 +13,15 @@ class Blind(object):
         self.serial = serial
         self.logger = logging.getLogger("blind")
         self.arduino = arduino
+        self.active = True
+
+    def activate(self):
+        self.active = True
+        self.logger.debug("blind %s has been activated" % self.name)
+
+    def deactivate(self):
+        self.active = False
+        self.logger.debug("blind %s has been deactivated" % self.name)
 
     def stop(self):
         if(self.arduino.state == ArduinoState.STOP_ONLY):
@@ -38,10 +47,15 @@ class Blind(object):
             raise ValueError("blind is moving")
 
     def fire_action(self, action_name):
-        self.logger.debug("call %s" % action_name)
         action_name = self.convert_to_underscore(action_name)
-        action_function = getattr(self, action_name)
-        action_function()
+        if(self.active):
+            self.logger.debug("call %s" % action_name)
+            action_function = getattr(self, action_name)
+            action_function()
+        elif(action_name == "activate"):
+            self.activate()
+        else:
+            self.logger.debug("blind %s is inactive" % self.name)
 
     def convert_to_underscore(self, name):
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)

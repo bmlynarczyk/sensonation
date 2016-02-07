@@ -15,6 +15,7 @@ class BlindController(object):
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     def PUT(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
         input_json = cherrypy.request.json
         name = input_json['name']
         action_name = input_json['action_name']
@@ -23,7 +24,7 @@ class BlindController(object):
                 try:
                     blind.fire_action(action_name)
                     cherrypy.response.status = 200
-                    return json.dumps(BlindView(blind.name).__dict__)
+                    return json.dumps(BlindView(blind.name, blind.active).__dict__)
                 except ValueError:
                     cherrypy.response.status = 409
                     return

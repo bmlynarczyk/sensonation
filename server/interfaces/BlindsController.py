@@ -10,14 +10,16 @@ class BlindsController(object):
         self.blinds = blinds
 
     def GET(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
         views = []
         for blind in self.blinds.list:
-            views.append(BlindView(blind.name).__dict__)
+            views.append(BlindView(blind.name, blind.active).__dict__)
         return json.dumps(views)
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     def PUT(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
         input_json = cherrypy.request.json
         action_name = input_json['action_name']
         self.blinds.fire_action(action_name)

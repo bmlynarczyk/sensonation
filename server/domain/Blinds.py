@@ -12,7 +12,6 @@ class Blinds(object):
         self.list = [
             Blind('a', 'b', 'c', serial, arduino),
             Blind('b', 'd', 'e', serial, arduino),
-            Blind('c', 'f', 'g', serial, arduino)
         ]
 
     def pull_down(self):
