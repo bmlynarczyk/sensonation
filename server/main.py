@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=logging.INFO)
 
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    ser = serial.Serial('/dev/ttyAMA0', 9600)
     # ser = Arduino()
     arduino = Arduino()
 
