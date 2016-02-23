@@ -8,7 +8,6 @@ import time
 class SchedulerService(object):
 
     def __init__(self, blinds, arduino, scheduler):
-        self.logger = logging.getLogger("SchedulerCallback")
         self.arduino = arduino
         self.sun_service = SunSerivce()
         self.scheduler = scheduler

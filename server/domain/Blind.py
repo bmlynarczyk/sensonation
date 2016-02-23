@@ -14,25 +14,26 @@ class Blind(object):
         self.logger = logging.getLogger("blind")
         self.arduino = arduino
         self.active = True
+        self.logger.info("blind %s has been created" % self.name)
 
     def activate(self):
         self.active = True
-        self.logger.debug("blind %s has been activated" % self.name)
+        self.logger.info("blind %s has been activated" % self.name)
 
     def deactivate(self):
         self.active = False
-        self.logger.debug("blind %s has been deactivated" % self.name)
+        self.logger.info("blind %s has been deactivated" % self.name)
 
     def stop(self):
         if(self.arduino.state == ArduinoState.STOP_ONLY):
-            self.logger.debug("stop movement of %s" % self.name)
+            self.logger.info("stop movement of %s" % self.name)
             self.serial.write(self.stop_code)
         else:
             raise ValueError("blind is stopped")
 
     def pull_down(self):
         if(self.arduino.state == ArduinoState.READY_TO_GO):
-            self.logger.debug("pull down %s" % self.name)
+            self.logger.info("pull down %s" % self.name)
             self.serial.write(self.pull_down_code)
             self.arduino.state = ArduinoState.STOP_ONLY
         else:
@@ -40,7 +41,7 @@ class Blind(object):
 
     def pull_up(self):
         if(self.arduino.state == ArduinoState.READY_TO_GO):
-            self.logger.debug("pull up %s" % self.name)
+            self.logger.info("pull up %s" % self.name)
             self.serial.write(self.pull_up_code)
             self.arduino.state = ArduinoState.STOP_ONLY
         else:
@@ -49,13 +50,13 @@ class Blind(object):
     def fire_action(self, action_name):
         action_name = self.convert_to_underscore(action_name)
         if(self.active):
-            self.logger.debug("call %s" % action_name)
+            self.logger.info("call %s" % action_name)
             action_function = getattr(self, action_name)
             action_function()
         elif(action_name == "activate"):
             self.activate()
         else:
-            self.logger.debug("blind %s is inactive" % self.name)
+            self.logger.info("blind %s is inactive" % self.name)
 
     def convert_to_underscore(self, name):
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)

@@ -20,14 +20,14 @@ class Blinds(object):
     def pull_down(self):
         if self.arduino.state == ArduinoState.READY_TO_GO:
             for blind in self.list:
-                blind.pull_down()
+                blind.fire_action('pullDown')
                 while self.arduino.state == ArduinoState.STOP_ONLY:
                     time.sleep(1)
 
     def pull_up(self):
         if self.arduino.state == ArduinoState.READY_TO_GO:
             for blind in self.list:
-                blind.pull_up()
+                blind.fire_action('pullUp')
                 while self.arduino.state == ArduinoState.STOP_ONLY:
                     time.sleep(1)
 

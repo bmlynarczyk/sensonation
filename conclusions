@@ -1,0 +1,6 @@
+Podczas instalacji napedu rolety istotna jest waga materiału rolety oraz poprzeczki dla prowadnicy.
+Żyłka w prowadnicy nie moze bć napieta za mocno bo powoduje to ruch silnika co skutkuje spadaniem kołowrotka z uchwytu mocowniczego.
+Zawsze należy zwryfikowac jakość przyklejenia krańcówek po kilku dnich mogą usię odklejać.
+W jednostce sterowniczej należy zadbać o równomierne rozłozenie zasilania.
+W przypadku niepopranego rozłożenia zasilania silniki mogą nie mieć wystarczajacej mocy do podnoszenia rolet.
+Dobrym rozkładem jest Podłączenie zasilania przekaźników do arduino natomiast zasilania do silników z raspberry pi.

@@ -12,7 +12,7 @@ class StopperCallback(object):
     def __call__(self):
         self.logger.debug("arduino state is: %d" % self.arduino.state)
         if self.arduino.state == ArduinoState.STOP_ONLY:
-            self.logger.debug("start waiting in stopperHandler")
+            self.logger.info("start waiting in stopperHandler")
             self.serial.readline()
-            self.logger.debug("stop waiting in stopperHandler")
+            self.logger.info("stop waiting in stopperHandler")
             self.arduino.state = ArduinoState.READY_TO_GO
