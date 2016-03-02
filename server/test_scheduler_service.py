@@ -4,52 +4,61 @@ from dateutil import parser
 from freezegun import freeze_time
 from pytz import timezone
 from application.SchedulerService import SchedulerService
+import unittest
 
 warsaw = timezone('Europe/Warsaw')
 
+class TestSchedulerService(unittest.TestCase):
 
-@freeze_time("2015-08-23 00:00:00")
-def test_initialisation_when_now_is_before_sunrise():
-    scheduler = BackgroundScheduler()
-    SchedulerService([], Arduino(), scheduler)
-    assert 3 == len(scheduler.get_jobs())
-    it = iter(scheduler.get_jobs())
-    first_job = it.next()
-    assert first_job.trigger.run_date == get_date("2015-08-23 05:29:15")
-    assert first_job.name == 'SchedulerService.pull_up_job'
-    second_job = it.next()
-    assert second_job.trigger.run_date == get_date("2015-08-23 19:38:43")
-    assert second_job.name == 'SchedulerService.pull_down_job'
-    third_job = it.next()
-    assert third_job.trigger.run_date == get_date("2015-08-24 01:00:00")
-    assert third_job.name == 'SchedulerService.recalc_job'
-
-
-@freeze_time("2015-08-23 07:00:00")
-def test_initialisation_when_now_is_after_sunrise():
-    scheduler = BackgroundScheduler()
-    SchedulerService([], Arduino(), scheduler)
-    assert 2 == len(scheduler.get_jobs())
-    it = iter(scheduler.get_jobs())
-    first_job = it.next()
-    assert first_job.trigger.run_date == get_date("2015-08-23 19:38:43")
-    assert first_job.name == 'SchedulerService.pull_down_job'
-    second_job = it.next()
-    assert second_job.trigger.run_date == get_date("2015-08-24 01:00:00")
-    assert second_job.name == 'SchedulerService.recalc_job'
+    @freeze_time("2015-12-23 00:00:00")
+    def test_initialisation_when_now_is_before_sunrise(self):
+        service = SchedulerService([], Arduino())
+        self.assertEqual(3, len(service.get_jobs()))
+        it = iter(service.get_jobs())
+        first_job = it.next()
+        self.assertEqual(first_job.trigger.run_date, self.get_date("2015-12-23 07:33:46"))
+        self.assertEqual(first_job.name, 'DefaultSchedulerPolicy.pull_up_job')
+        second_job = it.next()
+        self.assertEqual(second_job.trigger.run_date, self.get_date("2015-12-23 15:25:54"))
+        self.assertEqual(second_job.name, 'DefaultSchedulerPolicy.pull_down_job')
+        third_job = it.next()
+        self.assertEqual(third_job.trigger.run_date, self.get_date("2015-12-24 01:00:00"))
+        self.assertEqual(third_job.name, 'DefaultSchedulerPolicy.recalc_job')
 
 
-@freeze_time("2015-08-23 21:00:00")
-def test_initialisation_when_now_is_after_sunset():
-    scheduler = BackgroundScheduler()
-    SchedulerService([], Arduino(), scheduler)
-    assert 1 == len(scheduler.get_jobs())
-    it = iter(scheduler.get_jobs())
-    it = iter(scheduler.get_jobs())
-    first_job = it.next()
-    assert first_job.trigger.run_date == get_date("2015-08-24 01:00:00")
-    assert first_job.name == 'SchedulerService.recalc_job'
+    @freeze_time("2015-12-23 08:00:00")
+    def test_initialisation_when_now_is_after_sunrise(self):
+        service = SchedulerService([], Arduino())
+        self.assertEqual(2, len(service.get_jobs()))
+        it = iter(service.get_jobs())
+        first_job = it.next()
+        self.assertEqual(first_job.trigger.run_date, self.get_date("2015-12-23 15:25:54"))
+        self.assertEqual(first_job.name, 'DefaultSchedulerPolicy.pull_down_job')
+        second_job = it.next()
+        self.assertEqual(second_job.trigger.run_date, self.get_date("2015-12-24 01:00:00"))
+        self.assertEqual(second_job.name, 'DefaultSchedulerPolicy.recalc_job')
 
 
-def get_date(date):
-    return warsaw.localize(parser.parse(date))
+    @freeze_time("2015-08-23 21:00:00")
+    def test_initialisation_when_now_is_after_sunset(self):
+        service = SchedulerService([], Arduino())
+        self.assertEqual(1, len(service.get_jobs()))
+        it = iter(service.get_jobs())
+        it = iter(service.get_jobs())
+        first_job = it.next()
+        self.assertEqual(first_job.trigger.run_date, self.get_date("2015-08-24 01:00:00"))
+        self.assertEqual(first_job.name, 'DefaultSchedulerPolicy.recalc_job')
+
+    @freeze_time("2015-08-23 04:00:00")
+    def test_policy_change(self):
+        service = SchedulerService([], Arduino())
+        self.assertEqual(3, len(service.get_jobs()))
+        service.set_policy('weekend')
+        self.assertEqual(2, len(service.get_jobs()))
+        it = iter(service.get_jobs())
+        self.assertEqual(it.next().name, 'WeekendSchedulerPolicy.pull_down_job')
+        service.set_policy('default')
+        self.assertEqual(3, len(service.get_jobs()))
+
+    def get_date(self, date):
+        return warsaw.localize(parser.parse(date))

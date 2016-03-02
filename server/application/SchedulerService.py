@@ -1,44 +1,37 @@
-from domain.ArduinoState import ArduinoState
-import datetime
-import logging
-from application.SunService import SunSerivce
-import time
-
+from application.DefaultSchedulerPolicy import DefaultSchedulerPolicy
+from application.WeekendSchedulerPolicy import WeekendSchedulerPolicy
+from apscheduler.schedulers.background import BackgroundScheduler
 
 class SchedulerService(object):
 
-    def __init__(self, blinds, arduino, scheduler):
-        self.arduino = arduino
-        self.sun_service = SunSerivce()
-        self.scheduler = scheduler
+    def __init__(self, blinds, arduino):
         self.blinds = blinds
-        self.init()
+        self.arduino = arduino
+        self.scheduler = BackgroundScheduler()
+        self.scheduler.start()
+        self.set_default_policy()
 
-    def init(self):
-        now = datetime.datetime.now()
-        sunrise = self.sun_service.get_sunrise(now)
-        sunset = self.sun_service.get_sunset(now)
-        tommorow_1_am = self.get_tommorow_1_am(now)
-        if now < sunrise:
-            self.scheduler.add_job(self.pull_up_job, 'date', run_date=sunrise)
-        if now < sunset:
-            self.scheduler.add_job(self.pull_down_job, 'date', run_date=sunset)
-        self.scheduler.add_job(self.recalc_job, 'date', run_date=tommorow_1_am)
+    def set_default_policy(self):
+        self.remove_jobs()
+        DefaultSchedulerPolicy(self.blinds, self.arduino, self.scheduler)
 
-    def get_tommorow_1_am(self, date):
-        return date.replace(hour=1) + datetime.timedelta(days=1)
+    def set_weekend_policy(self):
+        self.remove_jobs()
+        WeekendSchedulerPolicy(self.blinds, self.arduino, self.scheduler)
 
-    def recalc_job(self):
-        now = datetime.datetime.now()
-        sunrise = self.sun_service.get_sunrise(now)
-        sunset = self.sun_service.get_sunset(now)
-        tommorow_1_am = self.get_tommorow_1_am(now)
-        self.scheduler.add_job(self.pull_up_job, 'date', run_date=sunrise)
-        self.scheduler.add_job(self.pull_down_job, 'date', run_date=sunset)
-        self.scheduler.add_job(self.recalc_job, 'date', run_date=tommorow_1_am)
+    def remove_jobs(self):
+        it = iter(self.scheduler.get_jobs())
+        for i in range(len(self.scheduler.get_jobs())):
+            job = it.next()
+            self.scheduler.remove_job(job.id)
 
-    def pull_down_job(self):
-        self.blinds.pull_down()
+    def get_jobs(self):
+        return self.scheduler.get_jobs()
 
-    def pull_up_job(self):
-        self.blinds.pull_up()
+    def set_policy(self, policy):
+        if policy not in ['default', 'weekend']:
+            raise ValueError("wrong policy for scheduling")
+        elif policy == 'weekend':
+            self.set_weekend_policy()
+        else:
+            self.set_default_policy()

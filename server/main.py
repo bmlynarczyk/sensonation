@@ -34,11 +34,11 @@ if __name__ == '__main__':
         '/api/blinds',
         {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}}
     )
-    # cherrypy.tree.mount(
-    #     TasksController(blinds, arduino),
-    #     '/api/tasks',
-    #     {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}}
-    # )
+    cherrypy.tree.mount(
+        TasksController(blinds, arduino),
+        '/api/tasks',
+        {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}}
+    )
     cherrypy.tree.mount(Root(), '/', config={
         '/': {
                 'tools.staticdir.on': True,

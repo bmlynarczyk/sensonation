@@ -1,4 +1,3 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from interfaces.views.JobView import JobView
 import json
 from application.SchedulerService import SchedulerService
@@ -9,14 +8,12 @@ class TasksController(object):
     exposed = True
 
     def __init__(self, blinds, arduino):
-        self.scheduler = BackgroundScheduler()
-        SchedulerService(blinds, arduino, self.scheduler)
-        self.scheduler.start()
+        self.service = SchedulerService(blinds, arduino)
 
     def GET(self):
         views = []
-        it = iter(self.scheduler.get_jobs())
-        for i in range(len(self.scheduler.get_jobs())):
+        it = iter(self.service.get_jobs())
+        for i in range(len(self.service.get_jobs())):
             job = it.next()
             views.append(JobView(job.id, job.name).__dict__)
         return json.dumps(views)
