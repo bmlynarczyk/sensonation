@@ -1,30 +1,21 @@
 from interfaces.views.BlindView import BlindView
-import cherrypy
-import json
 
 class BlindsController(object):
-
-    exposed = True
 
     def __init__(self, blinds):
         self.blinds = blinds
 
     def GET(self):
-        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
         views = []
         for blind in self.blinds.list:
             views.append(BlindView(blind.name, blind.active).__dict__)
-        return json.dumps(views)
+        return views
 
-    @cherrypy.tools.json_out()
-    @cherrypy.tools.json_in()
-    def PUT(self):
-        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+    def PUT(self, cherrypy):
         input_json = cherrypy.request.json
-        action_name = input_json['action_name']
+        try:
+            action_name = input_json['action_name']
+        except KeyError:
+            cherrypy.response.status = 400
+            return
         self.blinds.fire_action(action_name)
-
-    def OPTIONS(self):
-        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
-        cherrypy.response.headers["Access-Control-Allow-Methods"] = "PUT,GET"
-        cherrypy.response.headers["Access-Control-Allow-Headers"] = "Content-Type, Accept"
