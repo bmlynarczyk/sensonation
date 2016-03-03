@@ -22,6 +22,10 @@ class Dispatcher:
             'tasks': {
                 'GET': lambda cherrypy: taskController.GET(),
                 'OPTIONS': lambda cherrypy: self.add_options_to_response()
+            },
+            'tasks/policy': {
+                'OPTIONS': lambda cherrypy: self.add_options_to_response(),
+                'PUT': lambda cherrypy: taskController.PUT(cherrypy)
             }
         }
 

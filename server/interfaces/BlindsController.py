@@ -18,4 +18,8 @@ class BlindsController(object):
         except KeyError:
             cherrypy.response.status = 400
             return
-        self.blinds.fire_action(action_name)
+        try:
+            self.blinds.fire_action(action_name)
+        except ValueError:
+            cherrypy.response.status = 400
+            return
