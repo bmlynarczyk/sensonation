@@ -1,17 +1,13 @@
-from application.StopperCallback import StopperCallback
 from application.LoggerConfiguration import LoggerConfiguration
-from domain.Arduino import Arduino
 from domain.Blinds import Blinds
 import cherrypy
 from cherrypy.process.plugins import Monitor
 import logging
 import logging.config
-import serial
 import os
 from interfaces.Dispatcher import Dispatcher
 
 logging.config.dictConfig(LoggerConfiguration.VALUE)
-arduino = Arduino()
 blinds = Blinds(arduino)
 
 cherrypy.engine.unsubscribe('graceful', cherrypy.log.reopen_files)
