@@ -1,35 +1,33 @@
 from domain.ArduinoState import ArduinoState
 from domain.Blind import Blind
+from domain.BlindWithMcp import BlindWithMcp
+from domain.McpOutput import McpOutput
+from domain.McpInput import McpInput
 import logging
 import re
 import time
+from Adafruit_GPIO.MCP230xx import MCP23017
 
 
 class Blinds(object):
 
-    def __init__(self, serial, arduino):
-        self.arduino = arduino
+    def __init__(self, arduino):
+        mcpA = MCP23017(address=0x20)
         self.list = [
-            Blind('a', 'b', 'c', serial, arduino),
-            Blind('b', 'd', 'e', serial, arduino),
-            Blind('c', 'f', 'g', serial, arduino),
-            Blind('d', 'h', 'i', serial, arduino),
-            Blind('e', 'j', 'k', serial, arduino)
+            BlindWithMcp('a', McpOutput(8, mcpA), McpOutput(9, mcpA), McpInput(7, mcpA), McpInput(6, mcpA)),
+            BlindWithMcp('b', McpOutput(10, mcpA), McpOutput(11, mcpA), McpInput(5, mcpA), McpInput(4, mcpA)),
+            BlindWithMcp('c', McpOutput(12, mcpA), McpOutput(13, mcpA), McpInput(3, mcpA), McpInput(2, mcpA))
         ]
 
     def pull_down(self):
-        if self.arduino.state == ArduinoState.READY_TO_GO:
-            for blind in self.list:
-                blind.fire_action('pullDown')
-                while self.arduino.state == ArduinoState.STOP_ONLY:
-                    time.sleep(1)
+        for blind in self.list:
+            blind.fire_action('pullDown')
+            time.sleep(1)
 
     def pull_up(self):
-        if self.arduino.state == ArduinoState.READY_TO_GO:
-            for blind in self.list:
-                blind.fire_action('pullUp')
-                while self.arduino.state == ArduinoState.STOP_ONLY:
-                    time.sleep(1)
+        for blind in self.list:
+            blind.fire_action('pullUp')
+            time.sleep(1)
 
     def fire_action(self, action_name):
         action_name = self.convert_to_underscore(action_name)

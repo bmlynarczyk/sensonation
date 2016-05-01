@@ -11,15 +11,8 @@ import os
 from interfaces.Dispatcher import Dispatcher
 
 logging.config.dictConfig(LoggerConfiguration.VALUE)
-ser = serial.Serial('/dev/ttyAMA0', 9600)
-# ser = Arduino
 arduino = Arduino()
-blinds = Blinds(ser, arduino)
-Monitor(
-    cherrypy.engine,
-    StopperCallback(ser, arduino),
-    frequency=1
-).subscribe()
+blinds = Blinds(arduino)
 
 cherrypy.engine.unsubscribe('graceful', cherrypy.log.reopen_files)
 
