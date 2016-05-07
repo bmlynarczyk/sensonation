@@ -4,20 +4,19 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 class SchedulerService(object):
 
-    def __init__(self, blinds, arduino):
+    def __init__(self, blinds):
         self.blinds = blinds
-        self.arduino = arduino
         self.scheduler = BackgroundScheduler()
         self.scheduler.start()
         self.set_default_policy()
 
     def set_default_policy(self):
         self.remove_jobs()
-        DefaultSchedulerPolicy(self.blinds, self.arduino, self.scheduler)
+        DefaultSchedulerPolicy(self.blinds, self.scheduler)
 
     def set_weekend_policy(self):
         self.remove_jobs()
-        WeekendSchedulerPolicy(self.blinds, self.arduino, self.scheduler)
+        WeekendSchedulerPolicy(self.blinds, self.scheduler)
 
     def remove_jobs(self):
         it = iter(self.scheduler.get_jobs())

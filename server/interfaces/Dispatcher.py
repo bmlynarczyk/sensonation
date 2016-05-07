@@ -5,10 +5,10 @@ import cherrypy
 
 class Dispatcher:
 
-    def __init__(self, arduino, blinds):
+    def __init__(self, blinds):
         blindController = BlindController(blinds)
         blindsController = BlindsController(blinds)
-        taskController = TasksController(blinds, arduino)
+        taskController = TasksController(blinds)
         self.context = {
             'blind': {
                 'OPTIONS': lambda cherrypy: self.add_options_to_response(),

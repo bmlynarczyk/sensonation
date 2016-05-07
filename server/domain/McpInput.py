@@ -1,4 +1,3 @@
-from domain.ArduinoState import ArduinoState
 import logging
 import Adafruit_GPIO as GPIO
 

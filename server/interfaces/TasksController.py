@@ -4,8 +4,8 @@ from application.SchedulerService import SchedulerService
 
 class TasksController(object):
 
-    def __init__(self, blinds, arduino):
-        self.service = SchedulerService(blinds, arduino)
+    def __init__(self, blinds):
+        self.service = SchedulerService(blinds)
 
     def GET(self):
         views = []

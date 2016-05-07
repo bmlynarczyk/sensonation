@@ -9,12 +9,13 @@ from Adafruit_GPIO.MCP230xx import MCP23017
 
 class Blinds(object):
 
-    def __init__(self, arduino):
+    def __init__(self):
         mcpA = MCP23017(address=0x20)
         self.list = [
             BlindWithMcp('a', McpOutput(8, mcpA), McpOutput(9, mcpA), McpInput(7, mcpA), McpInput(6, mcpA)),
             BlindWithMcp('b', McpOutput(10, mcpA), McpOutput(11, mcpA), McpInput(5, mcpA), McpInput(4, mcpA)),
-            BlindWithMcp('c', McpOutput(12, mcpA), McpOutput(13, mcpA), McpInput(3, mcpA), McpInput(2, mcpA))
+            BlindWithMcp('c', McpOutput(12, mcpA), McpOutput(13, mcpA), McpInput(3, mcpA), McpInput(2, mcpA)),
+            BlindWithMcp('d', McpOutput(14, mcpA), McpOutput(15, mcpA), McpInput(1, mcpA), McpInput(0, mcpA))
         ]
 
     def pull_down(self):

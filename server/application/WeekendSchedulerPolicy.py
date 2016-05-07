@@ -6,9 +6,8 @@ import time
 
 class WeekendSchedulerPolicy(SchedulerPolicy):
 
-    def __init__(self, blinds, arduino, scheduler):
+    def __init__(self, blinds, scheduler):
         self.blinds = blinds
-        self.arduino = arduino
         self.scheduler = scheduler
         self.sun_service = SunSerivce()
         self.init()

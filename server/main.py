@@ -8,11 +8,11 @@ import os
 from interfaces.Dispatcher import Dispatcher
 
 logging.config.dictConfig(LoggerConfiguration.VALUE)
-blinds = Blinds(arduino)
+blinds = Blinds()
 
 cherrypy.engine.unsubscribe('graceful', cherrypy.log.reopen_files)
 
-cherrypy.quickstart(Dispatcher(arduino, blinds), config={
+cherrypy.quickstart(Dispatcher(blinds), config={
     '/': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': os.path.abspath(os.path.dirname(__file__)) + '/ui',
