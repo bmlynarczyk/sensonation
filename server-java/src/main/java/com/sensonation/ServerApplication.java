@@ -1,5 +1,7 @@
 package com.sensonation;
 
+import com.sensonation.config.DevBlindConfig;
+import com.sensonation.config.ProdBlindConfig;
 import com.sensonation.config.WebConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Import;
         "com.sensonation.controller"
 })
 @Import({
+        ProdBlindConfig.class,
+        DevBlindConfig.class,
         WebConfig.class
 })
 public class ServerApplication {
