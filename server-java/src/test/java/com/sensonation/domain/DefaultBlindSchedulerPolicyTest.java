@@ -21,8 +21,8 @@ public class DefaultBlindSchedulerPolicyTest {
         SunService sunService = new SunServiceImpl(clock);
         BlindSchedulerPolicy policy = new DefaultBlindSchedulerPolicy(sunService, clock);
         assertThat(policy.getPullUpDateTime()).isPresent();
-        assertThat(policy.getPullUpDateTime().get().atZone(systemDefault()))
-                .isEqualTo(getDate(2015, 8, 23, 6, 45).atZone(systemDefault()));
+        assertThat(policy.getPullUpDateTime().get())
+                .isEqualTo(getDate(2015, 8, 23, 6, 45));
     }
 
     @Test
@@ -31,8 +31,8 @@ public class DefaultBlindSchedulerPolicyTest {
         SunService sunService = new SunServiceImpl(clock);
         BlindSchedulerPolicy policy = new DefaultBlindSchedulerPolicy(sunService, clock);
         assertThat(policy.getPullUpDateTime()).isPresent();
-        assertThat(policy.getPullUpDateTime().get().atZone(systemDefault()))
-                .isEqualTo(getDate(2015, 12, 27, 7, 39, 24, 452000000).atZone(systemDefault()));
+        assertThat(policy.getPullUpDateTime().get())
+                .isEqualTo(getDate(2015, 12, 27, 7, 39, 24, 452000000));
     }
 
     private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute) {

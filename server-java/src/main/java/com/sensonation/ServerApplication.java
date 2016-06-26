@@ -14,9 +14,6 @@ import org.springframework.context.annotation.Import;
         BlindSchedulerConfig.class,
         WebConfig.class
 })
-//@ComponentScan(basePackages = {
-//        "com.sensonation.controller"
-//})
 public class ServerApplication {
 
     public static void main(String[] args) {

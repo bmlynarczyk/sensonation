@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-@Slf4j
 public class BlindScheduler {
 
     private final TaskScheduler taskScheduler;
@@ -21,7 +20,11 @@ public class BlindScheduler {
     private final BlindSchedulerPolicy policy;
     private final Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore;
 
-    public BlindScheduler(BlindSchedulerPolicy policy, TaskScheduler taskScheduler, BlindActionsExecutor blindActionsExecutor, SunService sunService, Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore) {
+    public BlindScheduler(BlindSchedulerPolicy policy,
+                          TaskScheduler taskScheduler,
+                          BlindActionsExecutor blindActionsExecutor,
+                          SunService sunService,
+                          Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore) {
         this.policy = policy;
         this.taskScheduler = taskScheduler;
         pullUpRunner = blindActionsExecutor::pullUpAllBlinds;
