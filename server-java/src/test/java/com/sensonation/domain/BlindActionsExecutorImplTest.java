@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-public class BlindActionsExecutorTest {
+public class BlindActionsExecutorImplTest {
 
     Supplier<Map<String, Blind>> blindsSupplier = mock(Supplier.class);
 
@@ -30,10 +30,10 @@ public class BlindActionsExecutorTest {
 //        given
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of());
         when(blindActionsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier, blindActionsProvider);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
 //        when
 //        then
-        assertThatThrownBy(() -> blindActionsExecutor.accept("blindName", "actionName")).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -42,10 +42,10 @@ public class BlindActionsExecutorTest {
         final Blind blind = Blind.builder().active(true).build();
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blind));
         when(blindActionsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier, blindActionsProvider);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
 //        when
 //        then
-        assertThatThrownBy(() -> blindActionsExecutor.accept("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -54,9 +54,9 @@ public class BlindActionsExecutorTest {
         final Blind blind = Blind.builder().active(true).build();
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blind));
         when(blindActionsProvider.get()).thenReturn(ImmutableMap.of("actionName", action));
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier, blindActionsProvider);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
 //        when
-        blindActionsExecutor.accept("blindName", "actionName");
+        blindActionsExecutor.executeFor("blindName", "actionName");
 //        then
         verify(action, times(1)).accept(blind);
     }

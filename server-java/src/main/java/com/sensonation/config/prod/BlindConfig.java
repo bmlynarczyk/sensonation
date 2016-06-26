@@ -1,27 +1,26 @@
-package com.sensonation.config;
+package com.sensonation.config.prod;
 
 import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.i2c.I2CBus;
-import com.sensonation.domain.Blind;
-import com.sensonation.domain.BlindActionsExecutor;
-import com.sensonation.domain.BlindActionsProvider;
-import com.sensonation.domain.BlindsProvider;
+import com.sensonation.config.McpInputFactory;
+import com.sensonation.config.McpOutputFactory;
+import com.sensonation.controller.BlindController;
+import com.sensonation.domain.*;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Configuration
 @Profile("prod")
-public class ProdBlindConfig {
+public class BlindConfig {
 
     @Bean
     GpioController gpio(){
@@ -55,8 +54,13 @@ public class ProdBlindConfig {
     }
 
     @Bean
-    public BiConsumer<String, String> blindActionsExecutor(Supplier<Map<String, Blind>> blindsProvider, Supplier<Map<String, Consumer<Blind>>> blindActionsProvider){
-        return new BlindActionsExecutor(blindsProvider, blindActionsProvider);
+    public BlindActionsExecutor blindActionsExecutor(Supplier<Map<String, Blind>> blindsProvider, Supplier<Map<String, Consumer<Blind>>> blindActionsProvider){
+        return new BlindActionsExecutorImpl(blindsProvider, blindActionsProvider);
+    }
+
+    @Bean
+    public BlindController blindController(BlindActionsExecutor blindActionsExecutor, Supplier<Map<String, Blind>> blindsProvider){
+        return new BlindController(blindActionsExecutor, blindsProvider);
     }
 
 }

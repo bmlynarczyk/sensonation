@@ -1,7 +1,6 @@
 package com.sensonation;
 
-import com.sensonation.config.DevBlindConfig;
-import com.sensonation.config.ProdBlindConfig;
+import com.sensonation.config.BlindSchedulerConfig;
 import com.sensonation.config.WebConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,14 +8,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan(basePackages = {
-        "com.sensonation.controller"
-})
 @Import({
-        ProdBlindConfig.class,
-        DevBlindConfig.class,
+        com.sensonation.config.dev.BlindConfig.class,
+        com.sensonation.config.prod.BlindConfig.class,
+        BlindSchedulerConfig.class,
         WebConfig.class
 })
+//@ComponentScan(basePackages = {
+//        "com.sensonation.controller"
+//})
 public class ServerApplication {
 
     public static void main(String[] args) {
