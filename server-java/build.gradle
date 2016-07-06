@@ -13,10 +13,10 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'maven-publish'
 
 jar {
 	baseName = 'server'
-	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -27,6 +27,18 @@ repositories {
 
 springBoot {
 	executable = true
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId 'com.introsoft.sensonation'
+			artifactId 'server'
+			version '0.1.0-SNAPSHOT'
+
+			from components.java
+		}
+	}
 }
 
 dependencies {
