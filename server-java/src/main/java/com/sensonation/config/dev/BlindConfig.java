@@ -1,15 +1,20 @@
 package com.sensonation.config.dev;
 
 import com.google.common.collect.ImmutableMap;
-import com.sensonation.controller.BlindController;
-import com.sensonation.domain.Blind;
+import com.sensonation.application.BlindService;
+import com.sensonation.domain.BlindEvent;
+import com.sensonation.domain.ManagedBlind;
+import com.sensonation.interfaces.BlindController;
+import com.sensonation.domain.BlindDriver;
 import com.sensonation.domain.BlindActionsExecutor;
-import com.sensonation.domain.BlindActionsExecutorImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import javax.annotation.Resource;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 
 @Configuration
@@ -17,13 +22,22 @@ import java.util.function.Supplier;
 public class BlindConfig {
 
     @Bean
-    public Supplier<Map<String, Blind>> blindsProvider(){
+    public Supplier<Map<String, ManagedBlind>> managedBlindsProvider(){
         return ImmutableMap::of;
     }
 
     @Bean
-    public BlindActionsExecutor blindActionsExecutor(){
-        return new BlindActionsExecutor() {
+    public ArrayBlockingQueue<BlindEvent> blindEvents(){
+        return new ArrayBlockingQueue<>(20);
+    }
+
+    @Bean
+    public BlindService blindService(ArrayBlockingQueue<BlindEvent> blindEvents){
+        return new BlindService() {
+            @Override
+            public void executeFor(String blindName, String actionName) {
+
+            }
 
             @Override
             public void pullUpAllBlinds() {
@@ -34,17 +48,12 @@ public class BlindConfig {
             public void pullDownAllBlinds() {
 
             }
-
-            @Override
-            public void executeFor(String s, String s2) {
-
-            }
         };
     }
 
     @Bean
-    public BlindController blindController(BlindActionsExecutor blindActionsExecutor, Supplier<Map<String, Blind>> blindsProvider){
-        return new BlindController(blindActionsExecutor, blindsProvider);
+    public BlindController blindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> managedBlindsProvider){
+        return new BlindController(blindService, managedBlindsProvider);
     }
 
 }

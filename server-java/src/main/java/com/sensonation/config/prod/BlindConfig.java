@@ -5,17 +5,24 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.i2c.I2CBus;
+import com.sensonation.application.BlindPullEventConsumer;
+import com.sensonation.application.BlindService;
+import com.sensonation.application.BlindServiceImpl;
+import com.sensonation.application.BlindStopper;
 import com.sensonation.config.McpInputFactory;
 import com.sensonation.config.McpOutputFactory;
-import com.sensonation.controller.BlindController;
 import com.sensonation.domain.*;
+import com.sensonation.interfaces.BlindController;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 
 @Configuration
@@ -44,23 +51,54 @@ public class BlindConfig {
     }
 
     @Bean
-    public Supplier<Map<String, Blind>> blindsProvider(McpOutputFactory mcpOutputFactory, McpInputFactory mcpInputFactory, GpioProvider mcpA){
-        return new BlindsProvider(mcpOutputFactory, mcpInputFactory, mcpA);
+    public Supplier<Map<String, BlindDriver>> blindDriversProvider(McpOutputFactory mcpOutputFactory,
+                                                                   McpInputFactory mcpInputFactory,
+                                                                   GpioProvider mcpA){
+        return new BlindDriversProvider(mcpOutputFactory, mcpInputFactory, mcpA);
     }
 
     @Bean
-    public Supplier<Map<String, Consumer<Blind>>> blindActionsProvider(){
-        return new BlindActionsProvider();
+    public BlindActionsExecutor blindActionsExecutor(Supplier<Map<String, BlindDriver>> blindDriversProvider){
+        return new BlindActionsExecutorImpl(blindDriversProvider);
     }
 
     @Bean
-    public BlindActionsExecutor blindActionsExecutor(Supplier<Map<String, Blind>> blindsProvider, Supplier<Map<String, Consumer<Blind>>> blindActionsProvider){
-        return new BlindActionsExecutorImpl(blindsProvider, blindActionsProvider);
+    public Supplier<Map<String, ManagedBlind>> managedBlindsProvider(){
+        return new ManagedBlindsProvider();
     }
 
     @Bean
-    public BlindController blindController(BlindActionsExecutor blindActionsExecutor, Supplier<Map<String, Blind>> blindsProvider){
-        return new BlindController(blindActionsExecutor, blindsProvider);
+    public ArrayBlockingQueue<BlindEvent> blindEvents(){
+        return new ArrayBlockingQueue<>(20);
+    }
+
+    @Bean
+    public TaskExecutor taskExecutor(){
+        return new SimpleAsyncTaskExecutor();
+    }
+
+    @Bean
+    public BlindStopper blindStopper(TaskExecutor taskExecutor, BlindActionsExecutor blindActionsExecutor){
+        return new BlindStopper(taskExecutor, blindActionsExecutor);
+    }
+
+    @Bean
+    public BlindPullEventConsumer blindPullEventConsumer(TaskExecutor taskExecutor,
+                                                         ArrayBlockingQueue<BlindEvent> blindEvents,
+                                                         BlindActionsExecutor blindActionsExecutor){
+        return new BlindPullEventConsumer(taskExecutor, blindEvents, blindActionsExecutor);
+    }
+
+    @Bean
+    public BlindService blindService(Supplier<Map<String, ManagedBlind>> managedBlindsProvider,
+                                     ArrayBlockingQueue<BlindEvent> blindEvents,
+                                     BlindStopper blindStopper){
+        return new BlindServiceImpl(managedBlindsProvider, blindEvents, blindStopper);
+    }
+
+    @Bean
+    public BlindController blindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> managedBlindsProvider){
+        return new BlindController(blindService, managedBlindsProvider);
     }
 
 }

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
-public class BlindTest {
+public class BlindDriverTest {
 
     McpOutput firstOutput = mock(McpOutput.class);
     McpOutput secondOutput = mock(McpOutput.class);
@@ -20,10 +20,10 @@ public class BlindTest {
     @Test
     public void should_pulled_down_using_outputs_and_input(){
 //        given
-        Blind blind = Blind.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).firstInput(firstInput).secondInput(secondInput).build();
+        BlindDriver blindDriver = BlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
 //        when
         when(firstInput.isOpen()).thenReturn(true, false);
-        blind.pullDown();
+        blindDriver.pullDown();
 //        then
         assertBlindPulledDown();
     }
@@ -31,10 +31,10 @@ public class BlindTest {
     @Test
     public void should_pulled_up_using_outputs_and_input(){
 //        given
-        Blind blind = Blind.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).firstInput(firstInput).secondInput(secondInput).build();
+        BlindDriver blindDriver = BlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
 //        when
         when(secondInput.isOpen()).thenReturn(true, false);
-        blind.pullUp();
+        blindDriver.pullUp();
 //        then
         assertBlindPulledUp();
     }

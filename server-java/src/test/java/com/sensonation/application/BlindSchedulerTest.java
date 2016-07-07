@@ -1,9 +1,7 @@
 package com.sensonation.application;
 
 import com.google.common.collect.Maps;
-import com.sensonation.domain.BlindActionsExecutor;
 import com.sensonation.domain.BlindSchedulerPolicy;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -21,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class BlindSchedulerTest {
 
-    private final BlindActionsExecutor blindActionsExecutor = mock(BlindActionsExecutor.class);
+    private final BlindService blindActionsExecutor = mock(BlindService.class);
     private final BlindSchedulerPolicy policy = mock(BlindSchedulerPolicy.class);
     private final SunService sunService = mock(SunService.class);
     private final TaskScheduler taskScheduler = mock(TaskScheduler.class);

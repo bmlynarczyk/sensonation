@@ -2,7 +2,6 @@ package com.sensonation.domain;
 
 import com.google.common.collect.ImmutableMap;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
-import com.pi4j.gpio.extension.mcp.MCP23S17Pin;
 import com.pi4j.io.gpio.GpioProvider;
 import com.sensonation.config.McpInputFactory;
 import com.sensonation.config.McpOutputFactory;
@@ -10,7 +9,7 @@ import com.sensonation.config.McpOutputFactory;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class BlindsProvider implements Supplier<Map<String, Blind>> {
+public class BlindDriversProvider implements Supplier<Map<String, BlindDriver>> {
 
     private final McpOutputFactory mcpOutputFactory;
 
@@ -18,9 +17,9 @@ public class BlindsProvider implements Supplier<Map<String, Blind>> {
 
     public final GpioProvider mcpA;
 
-    private final ImmutableMap<String, Blind> blinds;
+    private final ImmutableMap<String, BlindDriver> blinds;
 
-    public BlindsProvider(McpOutputFactory mcpOutputFactory, McpInputFactory mcpInputFactory, GpioProvider mcpA) {
+    public BlindDriversProvider(McpOutputFactory mcpOutputFactory, McpInputFactory mcpInputFactory, GpioProvider mcpA) {
         this.mcpOutputFactory = mcpOutputFactory;
         this.mcpInputFactory = mcpInputFactory;
         this.mcpA = mcpA;
@@ -28,43 +27,39 @@ public class BlindsProvider implements Supplier<Map<String, Blind>> {
     }
 
     @Override
-    public Map<String, Blind> get() {
+    public Map<String, BlindDriver> get() {
         return blinds;
     }
 
-    private ImmutableMap<String, Blind> populateBlinds() {
+    private ImmutableMap<String, BlindDriver> populateBlinds() {
         return ImmutableMap.of(
-                "a", Blind.builder()
+                "a", BlindDriver.builder()
                         .name("a")
                         .firstOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B0))
                         .secondOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B1))
-                        .firstInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A7))
-                        .secondInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A6))
-                        .active(true)
+                        .pullDownLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A7))
+                        .pullUpLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A6))
                         .build(),
-                "b", Blind.builder()
+                "b", BlindDriver.builder()
                         .name("b")
                         .firstOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B2))
                         .secondOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B3))
-                        .firstInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A5))
-                        .secondInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A4))
-                        .active(true)
+                        .pullDownLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A5))
+                        .pullUpLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A4))
                         .build(),
-                "c", Blind.builder()
+                "c", BlindDriver.builder()
                         .name("c")
                         .firstOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B4))
                         .secondOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B5))
-                        .firstInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A3))
-                        .secondInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A2))
-                        .active(true)
+                        .pullDownLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A3))
+                        .pullUpLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A2))
                         .build(),
-                "d", Blind.builder()
+                "d", BlindDriver.builder()
                         .name("d")
                         .firstOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B6))
                         .secondOutput(mcpOutputFactory.createOutput(mcpA, MCP23017Pin.GPIO_B7))
-                        .firstInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A1))
-                        .secondInput(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A0))
-                        .active(true)
+                        .pullDownLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A1))
+                        .pullUpLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A0))
                         .build()
         );
     }

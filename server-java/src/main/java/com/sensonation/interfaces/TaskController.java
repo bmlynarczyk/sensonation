@@ -1,12 +1,8 @@
-package com.sensonation.controller;
+package com.sensonation.interfaces;
 
 import com.sensonation.application.ScheduledTask;
 import com.sensonation.application.ScheduledTaskName;
-import com.sensonation.domain.Blind;
-import com.sensonation.representation.BlindRepresentation;
 import com.sensonation.representation.TaskRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +12,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 public class TaskController {

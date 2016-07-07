@@ -3,6 +3,7 @@ package com.sensonation.domain;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -14,11 +15,11 @@ import static org.mockito.Mockito.*;
 
 public class BlindActionsExecutorImplTest {
 
-    Supplier<Map<String, Blind>> blindsSupplier = mock(Supplier.class);
+    Supplier<Map<String, BlindDriver>> blindsSupplier = mock(Supplier.class);
 
-    Supplier<Map<String, Consumer<Blind>>> blindActionsProvider = mock(Supplier.class);
+    Supplier<Map<String, Consumer<BlindDriver>>> blindActionsProvider = mock(Supplier.class);
 
-    Consumer<Blind> action = mock(Consumer.class);
+    Consumer<BlindDriver> action = mock(Consumer.class);
 
     @Before
     public void setUp(){
@@ -30,7 +31,7 @@ public class BlindActionsExecutorImplTest {
 //        given
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of());
         when(blindActionsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
 //        when
 //        then
         assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(NoSuchElementException.class);
@@ -39,10 +40,9 @@ public class BlindActionsExecutorImplTest {
     @Test
     public void should_throw_exception_when_action_is_unsupported(){
 //        given
-        final Blind blind = Blind.builder().active(true).build();
-        when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blind));
-        when(blindActionsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
+        final BlindDriver blindDriver = BlindDriver.builder().build();
+        when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blindDriver));
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
 //        when
 //        then
         assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
@@ -51,14 +51,13 @@ public class BlindActionsExecutorImplTest {
     @Test
     public void should_execute_supported_action_on_existing_blind(){
 //        given
-        final Blind blind = Blind.builder().active(true).build();
-        when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blind));
-        when(blindActionsProvider.get()).thenReturn(ImmutableMap.of("actionName", action));
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier, blindActionsProvider);
+        final BlindDriver blindDriver = Mockito.mock(BlindDriver.class);
+        when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blindDriver));
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
 //        when
-        blindActionsExecutor.executeFor("blindName", "actionName");
+        blindActionsExecutor.executeFor("blindName", "stop");
 //        then
-        verify(action, times(1)).accept(blind);
+        verify(blindDriver, times(1)).stop();
     }
 
 }

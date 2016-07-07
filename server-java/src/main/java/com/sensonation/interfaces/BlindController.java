@@ -1,7 +1,7 @@
-package com.sensonation.controller;
+package com.sensonation.interfaces;
 
-import com.sensonation.domain.Blind;
-import com.sensonation.domain.BlindActionsExecutor;
+import com.sensonation.application.BlindService;
+import com.sensonation.domain.ManagedBlind;
 import com.sensonation.representation.BlindRepresentation;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,27 +18,27 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RestController
 public class BlindController {
 
-    private final BlindActionsExecutor blindActionsExecutor;
-    private final Supplier<Map<String, Blind>> blindsProvider;
+    private final BlindService blindService;
+    private final Supplier<Map<String, ManagedBlind>> blindsProvider;
 
-    public BlindController(BlindActionsExecutor blindActionsExecutor, Supplier<Map<String, Blind>> blindsProvider) {
-        this.blindActionsExecutor = blindActionsExecutor;
+    public BlindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> blindsProvider) {
+        this.blindService = blindService;
         this.blindsProvider = blindsProvider;
     }
 
     @RequestMapping(value = "/blinds/{name}/execute/{action}", method = PUT)
     public void executeAction(@PathVariable("name") String blindName, @PathVariable("action") String actionName) {
-        blindActionsExecutor.executeFor(blindName, actionName);
+        blindService.executeFor(blindName, actionName);
     }
 
     @RequestMapping(value = "/blinds/pullUp", method = PUT)
     public void pullUpAll() {
-        blindActionsExecutor.pullUpAllBlinds();
+        blindService.pullUpAllBlinds();
     }
 
     @RequestMapping(value = "/blinds/pullDown", method = PUT)
     public void pullDownAll() {
-        blindActionsExecutor.pullDownAllBlinds();
+        blindService.pullDownAllBlinds();
     }
 
     @RequestMapping(value = "/blinds", method = GET)
@@ -48,7 +48,7 @@ public class BlindController {
                 .collect(Collectors.toList());
     }
 
-    private BlindRepresentation toRepresentation(Blind blind) {
+    private BlindRepresentation toRepresentation(ManagedBlind blind) {
         return BlindRepresentation.builder()
                 .name(blind.getName())
                 .active(blind.isActive())

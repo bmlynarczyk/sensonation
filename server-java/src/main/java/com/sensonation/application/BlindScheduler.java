@@ -1,8 +1,6 @@
 package com.sensonation.application;
 
-import com.sensonation.domain.BlindActionsExecutor;
 import com.sensonation.domain.BlindSchedulerPolicy;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.*;
@@ -22,7 +20,7 @@ public class BlindScheduler {
 
     public BlindScheduler(BlindSchedulerPolicy policy,
                           TaskScheduler taskScheduler,
-                          BlindActionsExecutor blindActionsExecutor,
+                          BlindService blindActionsExecutor,
                           SunService sunService,
                           Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore) {
         this.policy = policy;

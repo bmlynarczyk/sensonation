@@ -7,15 +7,12 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
-@Slf4j
 public class McpInput {
 
     private final GpioPinDigitalInput input;
 
     boolean isOpen(){
-        boolean high = input.isHigh();
-        log.info("input is high {}", high);
-        return high;
+        return input.isHigh();
     }
 
 }

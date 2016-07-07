@@ -1,4 +1,4 @@
-package com.sensonation.controller;
+package com.sensonation.interfaces;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

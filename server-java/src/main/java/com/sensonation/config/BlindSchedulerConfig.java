@@ -1,7 +1,7 @@
 package com.sensonation.config;
 
 import com.sensonation.application.*;
-import com.sensonation.controller.TaskController;
+import com.sensonation.interfaces.TaskController;
 import com.sensonation.domain.BlindActionsExecutor;
 import com.sensonation.domain.DefaultBlindSchedulerPolicy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -38,9 +38,9 @@ public class BlindSchedulerConfig {
     }
 
     @Bean
-    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindActionsExecutor blindActionsExecutor, SunService sunService, Supplier<Map<ScheduledTaskName, ScheduledTask>> scheduledTaskStoreProvider){
+    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindService blindService, SunService sunService, Supplier<Map<ScheduledTaskName, ScheduledTask>> scheduledTaskStoreProvider){
         DefaultBlindSchedulerPolicy policy = new DefaultBlindSchedulerPolicy(sunService, systemDefaultZone());
-        return new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService, scheduledTaskStoreProvider.get());
+        return new BlindScheduler(policy, taskScheduler, blindService, sunService, scheduledTaskStoreProvider.get());
     }
 
     @Bean
