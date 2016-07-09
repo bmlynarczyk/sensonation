@@ -1,4 +1,4 @@
-package com.sensonation.application;
+package com.sensonation.domain;
 
 public enum ScheduledTaskName {
     PULL_UP,

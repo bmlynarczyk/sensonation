@@ -1,11 +1,15 @@
 package com.sensonation.application;
 
 import com.sensonation.domain.BlindSchedulerPolicy;
+import com.sensonation.domain.ScheduledTask;
+import com.sensonation.domain.ScheduledTaskName;
+import jdk.nashorn.internal.runtime.ScriptObject;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.*;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 public class BlindScheduler {
@@ -17,18 +21,18 @@ public class BlindScheduler {
     private final SunService sunService;
     private final BlindSchedulerPolicy policy;
     private final Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore;
+    private ScriptObject scheduledTasks;
 
     public BlindScheduler(BlindSchedulerPolicy policy,
                           TaskScheduler taskScheduler,
                           BlindService blindActionsExecutor,
-                          SunService sunService,
-                          Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore) {
+                          SunService sunService) {
         this.policy = policy;
         this.taskScheduler = taskScheduler;
         pullUpRunner = blindActionsExecutor::pullUpAllBlinds;
         pullDownRunner = blindActionsExecutor::pullDownAllBlinds;
         this.sunService = sunService;
-        this.scheduledTaskStore = scheduledTaskStore;
+        this.scheduledTaskStore = new ConcurrentHashMap<>();
         init();
     }
 
@@ -77,4 +81,7 @@ public class BlindScheduler {
         return Date.from(instant);
     }
 
+    public Map<ScheduledTaskName, ScheduledTask> getScheduledTasks() {
+        return scheduledTaskStore;
+    }
 }

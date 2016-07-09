@@ -1,8 +1,8 @@
 package com.sensonation.application;
 
-import com.google.common.collect.Maps;
-import com.sensonation.InstantTestUtils;
 import com.sensonation.domain.BlindSchedulerPolicy;
+import com.sensonation.domain.ScheduledTask;
+import com.sensonation.domain.ScheduledTaskName;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.sensonation.InstantTestUtils.getDate;
-import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -25,12 +24,11 @@ public class BlindSchedulerTest {
     private final BlindSchedulerPolicy policy = mock(BlindSchedulerPolicy.class);
     private final SunService sunService = mock(SunService.class);
     private final TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    private Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore;
+
 
     @Before
     public void setUp(){
         Mockito.reset(blindActionsExecutor, policy, sunService, taskScheduler);
-        scheduledTaskStore = Maps.newHashMap();
     }
 
     @Test
@@ -42,12 +40,14 @@ public class BlindSchedulerTest {
         when(sunService.isBeforeSunset()).thenReturn(true);
         when(policy.getPullUpDateTime()).thenReturn(Optional.of(pullUpDate));
         when(policy.getPullDownDateTime()).thenReturn(Optional.of(pullDownDate));
-        new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService, scheduledTaskStore);
+        BlindScheduler blindScheduler = new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService);
+        Map<ScheduledTaskName, ScheduledTask> scheduledTasks = blindScheduler.getScheduledTasks();
+
         verify(taskScheduler, times(3)).schedule(Matchers.any(Runnable.class), (Date) Matchers.anyObject());
-        assertThat(scheduledTaskStore.size()).isEqualTo(3);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.PULL_UP).getExecutionDate()).isEqualTo(pullUpDate);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.PULL_DOWN).getExecutionDate()).isEqualTo(pullDownDate);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
+        assertThat(scheduledTasks.size()).isEqualTo(3);
+        assertThat(scheduledTasks.get(ScheduledTaskName.PULL_UP).getExecutionDate()).isEqualTo(pullUpDate);
+        assertThat(scheduledTasks.get(ScheduledTaskName.PULL_DOWN).getExecutionDate()).isEqualTo(pullDownDate);
+        assertThat(scheduledTasks.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
     }
 
     @Test
@@ -57,21 +57,25 @@ public class BlindSchedulerTest {
         Instant pullDownDate = getDate(2015, 12, 27, 15, 28, 28, 185000000);
         Optional<Instant> date = Optional.of(pullDownDate);
         when(policy.getPullDownDateTime()).thenReturn(date);
-        new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService, scheduledTaskStore);
+        BlindScheduler blindScheduler = new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService);
+        Map<ScheduledTaskName, ScheduledTask> scheduledTasks = blindScheduler.getScheduledTasks();
+
         verify(taskScheduler, times(2)).schedule(Matchers.any(Runnable.class), (Date) Matchers.anyObject());
-        assertThat(scheduledTaskStore.size()).isEqualTo(2);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.PULL_DOWN).getExecutionDate()).isEqualTo(pullDownDate);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
+        assertThat(scheduledTasks.size()).isEqualTo(2);
+        assertThat(scheduledTasks.get(ScheduledTaskName.PULL_DOWN).getExecutionDate()).isEqualTo(pullDownDate);
+        assertThat(scheduledTasks.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
     }
 
     @Test
     public void test_initialisation_when_now_is_after_sunset(){
         when(sunService.isBeforeSunrise()).thenReturn(false);
         when(sunService.isBeforeSunset()).thenReturn(false);
-        new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService, scheduledTaskStore);
+        BlindScheduler blindScheduler = new BlindScheduler(policy, taskScheduler, blindActionsExecutor, sunService);
+        Map<ScheduledTaskName, ScheduledTask> scheduledTasks = blindScheduler.getScheduledTasks();
+
         verify(taskScheduler, times(1)).schedule(Matchers.any(Runnable.class), (Date) Matchers.anyObject());
-        assertThat(scheduledTaskStore.size()).isEqualTo(1);
-        assertThat(scheduledTaskStore.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
+        assertThat(scheduledTasks.size()).isEqualTo(1);
+        assertThat(scheduledTasks.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
     }
 
     private Instant tomorrowAt1Am() {

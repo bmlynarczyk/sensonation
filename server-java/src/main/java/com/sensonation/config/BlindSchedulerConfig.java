@@ -32,19 +32,14 @@ public class BlindSchedulerConfig {
     }
 
     @Bean
-    public Supplier<Map<ScheduledTaskName, ScheduledTask>> scheduledTaskStoreProvider(){
-        return new ScheduledTaskStoreProvider();
-    }
-
-    @Bean
-    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindService blindService, SunService sunService, Supplier<Map<ScheduledTaskName, ScheduledTask>> scheduledTaskStoreProvider){
+    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindService blindService, SunService sunService){
         DefaultBlindSchedulerPolicy policy = new DefaultBlindSchedulerPolicy(sunService, systemDefaultZone());
-        return new BlindScheduler(policy, taskScheduler, blindService, sunService, scheduledTaskStoreProvider.get());
+        return new BlindScheduler(policy, taskScheduler, blindService, sunService);
     }
 
     @Bean
-    TaskController taskController(Supplier<Map<ScheduledTaskName, ScheduledTask>> scheduledTaskStoreProvider){
-        return new TaskController(scheduledTaskStoreProvider);
+    TaskController taskController(BlindScheduler blindScheduler){
+        return new TaskController(blindScheduler);
     }
 
 }
