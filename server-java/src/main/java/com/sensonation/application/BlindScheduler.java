@@ -21,7 +21,6 @@ public class BlindScheduler {
     private final SunService sunService;
     private final BlindSchedulerPolicy policy;
     private final Map<ScheduledTaskName, ScheduledTask> scheduledTaskStore;
-    private ScriptObject scheduledTasks;
 
     public BlindScheduler(BlindSchedulerPolicy policy,
                           TaskScheduler taskScheduler,
@@ -34,6 +33,10 @@ public class BlindScheduler {
         this.sunService = sunService;
         this.scheduledTaskStore = new ConcurrentHashMap<>();
         init();
+    }
+
+    public Map<ScheduledTaskName, ScheduledTask> getScheduledTasks() {
+        return scheduledTaskStore;
     }
 
     private void init(){
@@ -53,14 +56,18 @@ public class BlindScheduler {
     private void addPullDownTask() {
         policy.getPullDownDateTime().ifPresent(instant -> {
             ScheduledFuture<?> schedule = taskScheduler.schedule(pullDownRunner, asDate(instant));
-            scheduledTaskStore.put(ScheduledTaskName.PULL_DOWN, new ScheduledTask(instant, schedule));
+            ScheduledTask unscheduledTask = scheduledTaskStore.put(ScheduledTaskName.PULL_DOWN, new ScheduledTask(instant, schedule));
+            if(unscheduledTask != null)
+                handleUnscheduledTask(unscheduledTask);
         });
     }
 
     private void addPullUpTask() {
         policy.getPullUpDateTime().ifPresent(instant -> {
             ScheduledFuture<?> schedule = taskScheduler.schedule(pullUpRunner, asDate(instant));
-            scheduledTaskStore.put(ScheduledTaskName.PULL_UP, new ScheduledTask(instant, schedule));
+            ScheduledTask unscheduledTask = scheduledTaskStore.put(ScheduledTaskName.PULL_UP, new ScheduledTask(instant, schedule));
+            if(unscheduledTask != null)
+                handleUnscheduledTask(unscheduledTask);
         });
     }
 
@@ -77,11 +84,13 @@ public class BlindScheduler {
         return dateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
-    private Date asDate(Instant instant) {
-        return Date.from(instant);
+    private void handleUnscheduledTask(ScheduledTask unscheduledTask) {
+        ScheduledFuture<?> unscheduledFuture = unscheduledTask.getScheduledFuture();
+        if(!unscheduledFuture.isDone())
+            unscheduledFuture.cancel(false);
     }
 
-    public Map<ScheduledTaskName, ScheduledTask> getScheduledTasks() {
-        return scheduledTaskStore;
+    private Date asDate(Instant instant) {
+        return Date.from(instant);
     }
 }
