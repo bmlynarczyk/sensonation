@@ -1,5 +1,6 @@
 package com.sensonation.domain;
 
+import com.sensonation.InstantTestUtils;
 import com.sensonation.application.SunService;
 import com.sensonation.application.SunServiceImpl;
 import com.sensonation.domain.BlindSchedulerPolicy;
@@ -10,6 +11,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import static com.sensonation.InstantTestUtils.getDate;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,14 +35,6 @@ public class DefaultBlindSchedulerPolicyTest {
         assertThat(policy.getPullUpDateTime()).isPresent();
         assertThat(policy.getPullUpDateTime().get())
                 .isEqualTo(getDate(2015, 12, 27, 7, 39, 24, 452000000));
-    }
-
-    private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute) {
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute).atZone(systemDefault()).toInstant();
-    }
-
-    private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) {
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(systemDefault()).toInstant();
     }
 
 }

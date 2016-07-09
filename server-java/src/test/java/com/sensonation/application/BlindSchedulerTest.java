@@ -1,6 +1,7 @@
 package com.sensonation.application;
 
 import com.google.common.collect.Maps;
+import com.sensonation.InstantTestUtils;
 import com.sensonation.domain.BlindSchedulerPolicy;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.sensonation.InstantTestUtils.getDate;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -70,10 +72,6 @@ public class BlindSchedulerTest {
         verify(taskScheduler, times(1)).schedule(Matchers.any(Runnable.class), (Date) Matchers.anyObject());
         assertThat(scheduledTaskStore.size()).isEqualTo(1);
         assertThat(scheduledTaskStore.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(tomorrowAt1Am());
-    }
-
-    private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) {
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(systemDefault()).toInstant();
     }
 
     private Instant tomorrowAt1Am() {

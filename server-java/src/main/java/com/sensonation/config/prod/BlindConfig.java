@@ -5,10 +5,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.i2c.I2CBus;
-import com.sensonation.application.BlindPullEventConsumer;
-import com.sensonation.application.BlindService;
-import com.sensonation.application.BlindServiceImpl;
-import com.sensonation.application.BlindStopper;
+import com.sensonation.application.*;
 import com.sensonation.config.McpInputFactory;
 import com.sensonation.config.McpOutputFactory;
 import com.sensonation.domain.*;
@@ -20,9 +17,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
+import java.time.Clock;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 
 @Configuration
@@ -83,10 +80,17 @@ public class BlindConfig {
     }
 
     @Bean
-    public BlindPullEventConsumer blindPullEventConsumer(TaskExecutor taskExecutor,
-                                                         ArrayBlockingQueue<BlindEvent> blindEvents,
-                                                         BlindActionsExecutor blindActionsExecutor){
-        return new BlindPullEventConsumer(taskExecutor, blindEvents, blindActionsExecutor);
+    public BlindLimitSwitchesMonitor limitSwitchesMonitor(Supplier<Map<String, BlindDriver>> blindDriversProvider,
+                                                          TaskExecutor taskExecutor){
+        return new BlindLimitSwitchesMonitor(blindDriversProvider, taskExecutor, new BlindLimitSwitchesExpositor(blindDriversProvider, Clock.systemDefaultZone()));
+    }
+
+    @Bean
+    public BlindEventRouter blindEventRouter(TaskExecutor taskExecutor,
+                                             ArrayBlockingQueue<BlindEvent> blindEvents,
+                                             BlindActionsExecutor blindActionsExecutor,
+                                             BlindLimitSwitchesMonitor blindLimitSwitchesMonitor){
+        return new BlindEventRouter(taskExecutor, blindEvents, blindActionsExecutor, blindLimitSwitchesMonitor);
     }
 
     @Bean

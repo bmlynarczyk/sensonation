@@ -11,7 +11,7 @@ public class McpInput {
 
     private final GpioPinDigitalInput input;
 
-    boolean isOpen(){
+    public boolean isOpen(){
         return input.isHigh();
     }
 

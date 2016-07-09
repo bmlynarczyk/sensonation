@@ -52,6 +52,14 @@ public class BlindDriver {
         stopped.set(true);
     }
 
+    public boolean isPullDownLimitReached(){
+        return !pullDownLimitSwitch.isOpen();
+    }
+
+    public boolean isPullUpLimitReached(){
+        return !pullUpLimitSwitch.isOpen();
+    }
+
     private boolean stillPullingDown() {
         return pullDownLimitSwitch.isOpen();
     }

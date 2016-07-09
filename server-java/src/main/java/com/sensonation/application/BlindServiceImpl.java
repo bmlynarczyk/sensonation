@@ -25,10 +25,10 @@ public class BlindServiceImpl implements BlindService {
     private static final String STOP = "stop";
     private static final String DEACTIVATE = "deactivate";
     private static final String ACTIVATE = "activate";
+    private static final Set<String> ACTIONS = ImmutableSet.of(ACTIVATE, DEACTIVATE, STOP, PULL_UP, PULL_DOWN);
 
     private final Map<String, ManagedBlind> blinds;
     private final BlockingQueue<BlindEvent> blindEvents;
-    private final Set<String> actions;
     private final BlindStopper blindStopper;
 
     public BlindServiceImpl(Supplier<Map<String, ManagedBlind>> blindsProvider,
@@ -37,7 +37,6 @@ public class BlindServiceImpl implements BlindService {
         this.blinds = blindsProvider.get();
         this.blindEvents = blindEvents;
         this.blindStopper = blindStopper;
-        this.actions = ImmutableSet.of(ACTIVATE, DEACTIVATE, STOP, PULL_UP, PULL_DOWN);
     }
 
     @Override
@@ -45,8 +44,35 @@ public class BlindServiceImpl implements BlindService {
         if(isNotSupported(actionName))
             throw new IllegalArgumentException("unsupported action");
         ManagedBlind blind = blinds.computeIfAbsent(blindName, THROW_NO_BLIND_FOUND);
+        switchMonitor();
         confirmedExecuteFor(blind, actionName);
+        switchMonitor();
 
+    }
+
+    @Override
+    public void pullUpAllBlinds(){
+        switchMonitor();
+        blinds.values().stream()
+                .forEach(blind -> confirmedExecuteFor(blind, PULL_UP));
+        switchMonitor();
+    }
+
+    @Override
+    public void pullDownAllBlinds(){
+        switchMonitor();
+        blinds.values().stream()
+                .forEach(blind -> confirmedExecuteFor(blind, PULL_DOWN));
+        switchMonitor();
+    }
+
+    @SneakyThrows
+    private void switchMonitor() {
+        blindEvents.put(BlindEvent.builder().actionName("switchMonitor").build());
+    }
+
+    private boolean isNotSupported(String actionName) {
+        return !ACTIONS.contains(actionName);
     }
 
     private void confirmedExecuteFor(ManagedBlind blind, String actionName) {
@@ -69,10 +95,6 @@ public class BlindServiceImpl implements BlindService {
         }
     }
 
-    private boolean isNotSupported(String actionName) {
-        return !actions.contains(actionName);
-    }
-
     private void stopMovement() {
         blindEvents.drainTo(Lists.newArrayList());
         blindStopper.stop();
@@ -81,18 +103,6 @@ public class BlindServiceImpl implements BlindService {
     @SneakyThrows
     private void produceBlindEvent(String blindName, String actionName) {
         blindEvents.put(BlindEvent.builder().blindName(blindName).actionName(actionName).build());
-    }
-
-    @Override
-    public void pullUpAllBlinds(){
-        blinds.values().stream()
-                .forEach(blind -> confirmedExecuteFor(blind, PULL_UP));
-    }
-
-    @Override
-    public void pullDownAllBlinds(){
-        blinds.values().stream()
-                .forEach(blind -> confirmedExecuteFor(blind, PULL_DOWN));
     }
 
 }

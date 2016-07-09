@@ -1,13 +1,11 @@
 package com.sensonation.application;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
+import static com.sensonation.InstantTestUtils.getDate;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,14 +44,6 @@ public class SunServiceImplTest {
         SunService service = new SunServiceImpl(Clock.fixed(date, systemDefault()));
                 Instant sunriseDate = service.getSunsetDate(date);
         assertThat(sunriseDate).isEqualTo(getDate(2015, 8, 23, 19, 38, 43, 330000000));
-    }
-
-    private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute) {
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute).atZone(systemDefault()).toInstant();
-    }
-
-    private Instant getDate(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) {
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(systemDefault()).toInstant();
     }
 
 }
