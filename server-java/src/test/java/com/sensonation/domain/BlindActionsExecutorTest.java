@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-public class BlindActionsExecutorImplTest {
+public class BlindActionsExecutorTest {
 
     Supplier<Map<String, BlindDriver>> blindsSupplier = mock(Supplier.class);
 
@@ -31,7 +31,7 @@ public class BlindActionsExecutorImplTest {
 //        given
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of());
         when(blindActionsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier);
 //        when
 //        then
         assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(NoSuchElementException.class);
@@ -42,7 +42,7 @@ public class BlindActionsExecutorImplTest {
 //        given
         final BlindDriver blindDriver = BlindDriver.builder().build();
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blindDriver));
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier);
 //        when
 //        then
         assertThatThrownBy(() -> blindActionsExecutor.executeFor("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
@@ -53,7 +53,7 @@ public class BlindActionsExecutorImplTest {
 //        given
         final BlindDriver blindDriver = Mockito.mock(BlindDriver.class);
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blindDriver));
-        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutorImpl(blindsSupplier);
+        final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier);
 //        when
         blindActionsExecutor.executeFor("blindName", "stop");
 //        then

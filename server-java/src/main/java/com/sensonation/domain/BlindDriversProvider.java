@@ -3,8 +3,8 @@ package com.sensonation.domain;
 import com.google.common.collect.ImmutableMap;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.GpioProvider;
-import com.sensonation.config.McpInputFactory;
-import com.sensonation.config.McpOutputFactory;
+import com.sensonation.application.McpInputFactory;
+import com.sensonation.application.McpOutputFactory;
 
 import java.util.Map;
 import java.util.function.Supplier;

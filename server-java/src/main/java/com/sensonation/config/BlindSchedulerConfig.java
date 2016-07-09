@@ -1,9 +1,8 @@
 package com.sensonation.config;
 
 import com.sensonation.application.*;
-import com.sensonation.interfaces.TaskController;
-import com.sensonation.domain.BlindActionsExecutor;
 import com.sensonation.domain.DefaultBlindSchedulerPolicy;
+import com.sensonation.interfaces.TaskController;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,7 @@ public class BlindSchedulerConfig {
 
     @Bean
     SunService sunService(){
-        return new SunServiceImpl(systemDefaultZone());
+        return new SunService(systemDefaultZone());
     }
 
     @Bean

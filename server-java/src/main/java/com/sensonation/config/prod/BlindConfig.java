@@ -6,8 +6,8 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.i2c.I2CBus;
 import com.sensonation.application.*;
-import com.sensonation.config.McpInputFactory;
-import com.sensonation.config.McpOutputFactory;
+import com.sensonation.application.McpInputFactory;
+import com.sensonation.application.McpOutputFactory;
 import com.sensonation.domain.*;
 import com.sensonation.interfaces.BlindController;
 import lombok.SneakyThrows;
@@ -56,7 +56,7 @@ public class BlindConfig {
 
     @Bean
     public BlindActionsExecutor blindActionsExecutor(Supplier<Map<String, BlindDriver>> blindDriversProvider){
-        return new BlindActionsExecutorImpl(blindDriversProvider);
+        return new BlindActionsExecutor(blindDriversProvider);
     }
 
     @Bean

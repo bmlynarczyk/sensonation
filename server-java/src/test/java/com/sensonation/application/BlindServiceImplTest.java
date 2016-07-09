@@ -1,19 +1,13 @@
 package com.sensonation.application;
 
 import com.google.common.collect.ImmutableMap;
-import com.sensonation.domain.BlindActionsExecutor;
-import com.sensonation.domain.BlindActionsExecutorImpl;
-import com.sensonation.domain.BlindDriver;
 import com.sensonation.domain.ManagedBlind;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingDeque;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.any;

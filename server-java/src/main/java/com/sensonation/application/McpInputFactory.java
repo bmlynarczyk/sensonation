@@ -1,4 +1,4 @@
-package com.sensonation.config;
+package com.sensonation.application;
 
 import com.pi4j.io.gpio.*;
 import com.sensonation.domain.McpInput;
