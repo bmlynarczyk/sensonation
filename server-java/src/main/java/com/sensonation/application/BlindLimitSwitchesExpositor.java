@@ -59,13 +59,14 @@ public class BlindLimitSwitchesExpositor {
     }
 
     private void handleSuspiciousState(BlindDriver blindDriver) {
-        logSuspiciousState(blindDriver);
-        if(!isSuspiciousStateReported(blindDriver))
+        if(!isSuspiciousStateReported(blindDriver)){
+            logSuspiciousState(blindDriver);
             reportSuspiciousState(blindDriver);
+        }
     }
 
     private void logSuspiciousState(BlindDriver blindDriver) {
-        log.info("pull down limit and pull up limit of blind {} are reached", blindDriver.getName());
+        log.info("[SUSPICIOUS STATE DETECTED!!!] pull down limit and pull up limit of blind {} are reached", blindDriver.getName());
     }
 
     private boolean isSuspiciousStateReported(BlindDriver blindDriver) {
@@ -95,7 +96,7 @@ public class BlindLimitSwitchesExpositor {
     }
 
     private static void logUnsuspectedState(BlindDriver blindDriver) {
-        log.info("in blind driver {} pull down limit {} reached, pull up limit {} reached",
+        log.info("[unsuspected state]in blind driver {} pull down limit {} reached, pull up limit {} reached",
                 blindDriver.getName(),
                 blindDriver.isPullDownLimitReached() ? IS : IS_NOT,
                 blindDriver.isPullUpLimitReached() ? IS : IS_NOT);

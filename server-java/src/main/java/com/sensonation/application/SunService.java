@@ -3,10 +3,7 @@ package com.sensonation.application;
 import com.florianmski.suncalc.SunCalc;
 import com.florianmski.suncalc.models.SunPhase;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.GregorianCalendar;
 
 public class SunService {
@@ -47,6 +44,21 @@ public class SunService {
         Instant now = Instant.now(clock);
         return now.isBefore(getSunsetDate(now));
     }
+
+    public Instant tomorrowAt1Am() {
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(clock), LocalTime.MIDNIGHT);
+        dateTime = dateTime.plusDays(1);
+        dateTime = dateTime.plusHours(1);
+        return dateTime.atZone(ZoneId.systemDefault()).toInstant();
+    }
+
+    public boolean isAfterTodayAt1Am() {
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(clock), LocalTime.MIDNIGHT);
+        dateTime = dateTime.plusMinutes(59);
+        dateTime = dateTime.plusSeconds(59);
+        return Instant.now(clock).atZone(ZoneId.systemDefault()).toInstant().isAfter(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
 
     private GregorianCalendar toCalendar(Instant instant) {
         return GregorianCalendar.from(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));

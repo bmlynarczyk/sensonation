@@ -3,7 +3,6 @@ package com.sensonation.application;
 import com.sensonation.domain.BlindSchedulerPolicy;
 import com.sensonation.domain.ScheduledTask;
 import com.sensonation.domain.ScheduledTaskName;
-import jdk.nashorn.internal.runtime.ScriptObject;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.time.*;
@@ -40,9 +39,9 @@ public class BlindScheduler {
     }
 
     private void init(){
-        if(sunService.isBeforeSunrise())
+        if(sunService.isAfterTodayAt1Am() &&  sunService.isBeforeSunrise())
             addPullUpTask();
-        if(sunService.isBeforeSunset())
+        if(sunService.isAfterTodayAt1Am() &&  sunService.isBeforeSunset())
             addPullDownTask();
         addRecalcTask();
     }
@@ -72,16 +71,9 @@ public class BlindScheduler {
     }
 
     private void addRecalcTask() {
-        Instant tomorrowAt1Am = tomorrowAt1Am();
+        Instant tomorrowAt1Am = sunService.tomorrowAt1Am();
         ScheduledFuture<?> schedule = taskScheduler.schedule(recalcRunner, asDate(tomorrowAt1Am));
         scheduledTaskStore.put(ScheduledTaskName.RECALC, new ScheduledTask(tomorrowAt1Am, schedule));
-    }
-
-    private Instant tomorrowAt1Am() {
-        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(ZoneId.systemDefault()), LocalTime.MIDNIGHT);
-        dateTime = dateTime.plusDays(1);
-        dateTime = dateTime.plusHours(1);
-        return dateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
     private void handleUnscheduledTask(ScheduledTask unscheduledTask) {
