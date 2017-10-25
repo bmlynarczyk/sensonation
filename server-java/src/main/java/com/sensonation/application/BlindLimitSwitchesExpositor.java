@@ -4,13 +4,13 @@ import com.sensonation.domain.BlindDriver;
 import com.sensonation.domain.BlindLimitSwitchState;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.MessageFormat;
 import java.time.Clock;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.Instant.now;
@@ -34,7 +34,7 @@ public class BlindLimitSwitchesExpositor {
     private static final String IS = "is";
     private static final String IS_NOT = "isn't";
 
-    public BlindLimitSwitchesExpositor(Supplier<Map<String, BlindDriver>> blindDriversProvider, Clock clock) {
+    public BlindLimitSwitchesExpositor(BlindDriversProvider blindDriversProvider, Clock clock) {
         this.clock = clock;
         states = Collections.synchronizedMap(blindDriversProvider.get().entrySet()
                         .stream()
@@ -44,6 +44,13 @@ public class BlindLimitSwitchesExpositor {
 
     public Set<BlindLimitSwitchState> getStates() {
         return states.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
+    }
+
+    public String getState(BlindDriver blindDriver) {
+        return MessageFormat.format("in | {0} | pull down limit | {1} | reached, pull up limit | {2} | reached",
+                blindDriver.getName(),
+                blindDriver.isPullDownLimitReached() ? IS : IS_NOT,
+                blindDriver.isPullUpLimitReached() ? IS : IS_NOT);
     }
 
     public void exposeState(BlindDriver blindDriver) {
@@ -101,4 +108,5 @@ public class BlindLimitSwitchesExpositor {
                 blindDriver.isPullDownLimitReached() ? IS : IS_NOT,
                 blindDriver.isPullUpLimitReached() ? IS : IS_NOT);
     }
+
 }

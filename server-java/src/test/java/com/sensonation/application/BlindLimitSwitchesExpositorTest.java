@@ -10,20 +10,17 @@ import org.mockito.Mockito;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import static com.sensonation.InstantTestUtils.getDate;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BlindLimitSwitchesExpositorTest {
 
     private final McpInput pullDownLimitSwitch = mock(McpInput.class);
     private final McpInput pullUpLimitSwitch = mock(McpInput.class);
+    private final BlindDriversProvider blindDriversProvider = mock(BlindDriversProvider.class);
 
     private final BlindDriver blindDriver = BlindDriver.builder()
             .name("a")
@@ -33,12 +30,12 @@ public class BlindLimitSwitchesExpositorTest {
             .pullUpLimitSwitch(pullUpLimitSwitch)
             .build();
 
-    private final Supplier<Map<String, BlindDriver>> blindDriversProvider = () -> ImmutableMap.of("a",  blindDriver);
     private final Clock clock = Mockito.mock(Clock.class);
 
     @Before
     public void setUp(){
         reset(pullDownLimitSwitch, pullUpLimitSwitch);
+        stub(blindDriversProvider.get()).toReturn(ImmutableMap.of("a", blindDriver));
     }
 
     @Test

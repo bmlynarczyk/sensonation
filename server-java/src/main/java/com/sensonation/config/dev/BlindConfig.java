@@ -5,16 +5,12 @@ import com.sensonation.application.BlindService;
 import com.sensonation.domain.BlindEvent;
 import com.sensonation.domain.ManagedBlind;
 import com.sensonation.interfaces.BlindController;
-import com.sensonation.domain.BlindDriver;
-import com.sensonation.domain.BlindActionsExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 
 @Configuration
@@ -22,17 +18,17 @@ import java.util.function.Supplier;
 public class BlindConfig {
 
     @Bean
-    public Supplier<Map<String, ManagedBlind>> managedBlindsProvider(){
+    public Supplier<Map<String, ManagedBlind>> managedBlindsProvider() {
         return ImmutableMap::of;
     }
 
     @Bean
-    public ArrayBlockingQueue<BlindEvent> blindEvents(){
+    public ArrayBlockingQueue<BlindEvent> blindEvents() {
         return new ArrayBlockingQueue<>(20);
     }
 
     @Bean
-    public BlindService blindService(ArrayBlockingQueue<BlindEvent> blindEvents){
+    public BlindService blindService() {
         return new BlindService() {
             @Override
             public void executeFor(String blindName, String actionName) {
@@ -52,7 +48,7 @@ public class BlindConfig {
     }
 
     @Bean
-    public BlindController blindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> managedBlindsProvider){
+    public BlindController blindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> managedBlindsProvider) {
         return new BlindController(blindService, managedBlindsProvider);
     }
 

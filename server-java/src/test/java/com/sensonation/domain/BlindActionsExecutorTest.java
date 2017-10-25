@@ -1,6 +1,7 @@
 package com.sensonation.domain;
 
 import com.google.common.collect.ImmutableMap;
+import com.sensonation.application.BlindDriversProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 public class BlindActionsExecutorTest {
 
-    Supplier<Map<String, BlindDriver>> blindsSupplier = mock(Supplier.class);
+    BlindDriversProvider blindsSupplier = mock(BlindDriversProvider.class);
 
     Supplier<Map<String, Consumer<BlindDriver>>> blindActionsProvider = mock(Supplier.class);
 

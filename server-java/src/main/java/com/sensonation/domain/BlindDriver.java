@@ -22,7 +22,7 @@ public class BlindDriver {
     private final AtomicBoolean stopped = new AtomicBoolean(true);
 
     @SneakyThrows
-    public void pullDown(){
+    void pullDown(){
         log.info("pull down {}", name);
         stopped.set(false);
         firstOutput.setLow();
@@ -34,7 +34,7 @@ public class BlindDriver {
     }
 
     @SneakyThrows
-    public void pullUp() {
+    void pullUp() {
         log.info("pull up {}", name);
         stopped.set(false);
         secondOutput.setLow();
@@ -45,7 +45,7 @@ public class BlindDriver {
         stop();
     }
 
-    public void stop(){
+    void stop(){
         log.info("stop movement of {}", name);
         firstOutput.setLow();
         secondOutput.setLow();

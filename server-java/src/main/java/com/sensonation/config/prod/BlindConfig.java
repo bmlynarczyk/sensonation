@@ -10,6 +10,7 @@ import com.sensonation.application.McpInputFactory;
 import com.sensonation.application.McpOutputFactory;
 import com.sensonation.domain.*;
 import com.sensonation.interfaces.BlindController;
+import com.sensonation.interfaces.BlindLimitSwitchController;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,14 +49,14 @@ public class BlindConfig {
     }
 
     @Bean
-    public Supplier<Map<String, BlindDriver>> blindDriversProvider(McpOutputFactory mcpOutputFactory,
+    public BlindDriversProvider blindDriversProvider(McpOutputFactory mcpOutputFactory,
                                                                    McpInputFactory mcpInputFactory,
                                                                    GpioProvider mcpA){
-        return new BlindDriversProvider(mcpOutputFactory, mcpInputFactory, mcpA);
+        return new BlindDriversProvider(new BlindsDriversConfig(mcpOutputFactory, mcpInputFactory, mcpA));
     }
 
     @Bean
-    public BlindActionsExecutor blindActionsExecutor(Supplier<Map<String, BlindDriver>> blindDriversProvider){
+    public BlindActionsExecutor blindActionsExecutor(BlindDriversProvider blindDriversProvider){
         return new BlindActionsExecutor(blindDriversProvider);
     }
 
@@ -80,9 +81,15 @@ public class BlindConfig {
     }
 
     @Bean
-    public BlindLimitSwitchesMonitor limitSwitchesMonitor(Supplier<Map<String, BlindDriver>> blindDriversProvider,
-                                                          TaskExecutor taskExecutor){
-        return new BlindLimitSwitchesMonitor(blindDriversProvider, taskExecutor, new BlindLimitSwitchesExpositor(blindDriversProvider, Clock.systemDefaultZone()));
+    public BlindLimitSwitchesMonitor limitSwitchesMonitor(BlindDriversProvider blindDriversProvider,
+                                                          TaskExecutor taskExecutor,
+                                                          BlindLimitSwitchesExpositor blindLimitSwitchesExpositor){
+        return new BlindLimitSwitchesMonitor(blindDriversProvider, taskExecutor, blindLimitSwitchesExpositor);
+    }
+
+    @Bean
+    public BlindLimitSwitchesExpositor blindLimitSwitchesExpositor(BlindDriversProvider blindDriversProvider) {
+        return new BlindLimitSwitchesExpositor(blindDriversProvider, Clock.systemDefaultZone());
     }
 
     @Bean
@@ -103,6 +110,11 @@ public class BlindConfig {
     @Bean
     public BlindController blindController(BlindService blindService, Supplier<Map<String, ManagedBlind>> managedBlindsProvider){
         return new BlindController(blindService, managedBlindsProvider);
+    }
+
+    @Bean
+    public BlindLimitSwitchController blindLimitSwitchController(BlindLimitSwitchesExpositor blindLimitSwitchesExpositor, BlindDriversProvider blindDriversProvider){
+        return new BlindLimitSwitchController(blindLimitSwitchesExpositor, blindDriversProvider);
     }
 
 }

@@ -1,10 +1,11 @@
 package com.sensonation.domain;
 
+import com.sensonation.application.BlindDriversProvider;
+
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class BlindActionsExecutor {
 
@@ -20,7 +21,7 @@ public class BlindActionsExecutor {
 
     private final Map<String, Consumer<BlindDriver>> actions;
 
-    public BlindActionsExecutor(Supplier<Map<String, BlindDriver>> blindsProvider) {
+    public BlindActionsExecutor(BlindDriversProvider blindsProvider) {
         this.blinds = blindsProvider.get();
         this.actions = new BlindActionsProvider().get();
     }
@@ -31,6 +32,6 @@ public class BlindActionsExecutor {
     }
 
     public void stopAll() {
-        blinds.values().stream().forEach(BlindDriver::stop);
+        blinds.values().forEach(BlindDriver::stop);
     }
 }

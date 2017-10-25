@@ -13,7 +13,8 @@ public class BlindStopper {
         this.blindActionsExecutor = blindActionsExecutor;
     }
 
-    public void stop() {
+    void stop() {
         taskExecutor.execute(blindActionsExecutor::stopAll);
     }
+
 }

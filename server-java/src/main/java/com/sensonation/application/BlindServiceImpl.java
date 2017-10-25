@@ -53,7 +53,7 @@ public class BlindServiceImpl implements BlindService {
     @Override
     public void pullUpAllBlinds(){
         switchMonitor();
-        blinds.values().stream()
+        blinds.values()
                 .forEach(blind -> confirmedExecuteFor(blind, PULL_UP));
         switchMonitor();
     }
@@ -61,7 +61,7 @@ public class BlindServiceImpl implements BlindService {
     @Override
     public void pullDownAllBlinds(){
         switchMonitor();
-        blinds.values().stream()
+        blinds.values()
                 .forEach(blind -> confirmedExecuteFor(blind, PULL_DOWN));
         switchMonitor();
     }

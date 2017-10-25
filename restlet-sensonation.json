@@ -1,0 +1,544 @@
+{
+  "front-version": "2.10.1",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "id": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88",
+      "lastModified": "2017-10-26T00:19:38.471+02:00",
+      "name": "sensonation"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/a/execute/pullDown"
+      },
+      "id": "f481014c-26e4-4ede-b6a5-f46fdbe8ca6c",
+      "lastModified": "2017-10-25T23:04:20.791+02:00",
+      "name": "pull-down-a-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/b/execute/pullDown"
+      },
+      "id": "1bb286c4-e3ea-44ca-97e5-a56f02571ab6",
+      "lastModified": "2017-10-25T23:04:30.343+02:00",
+      "name": "pull-down-b-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/c/execute/pullDown"
+      },
+      "id": "4caea988-3658-4b49-bfa8-3265eb616f9f",
+      "lastModified": "2017-10-25T23:04:40.514+02:00",
+      "name": "pull-down-c-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/d/execute/pullDown"
+      },
+      "id": "0d21cb54-7057-4aee-bc04-148629323fb7",
+      "lastModified": "2017-10-25T23:04:48.841+02:00",
+      "name": "pull-down-d-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/a/execute/pullUp"
+      },
+      "id": "c40450b7-7941-42a1-a3f0-2d491b560067",
+      "lastModified": "2017-10-25T23:05:04.712+02:00",
+      "name": "pull-up-a-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/b/execute/pullUp"
+      },
+      "id": "9d801ebb-0a55-4d2a-85c5-72f9a1e15fdd",
+      "lastModified": "2017-10-25T23:05:13.452+02:00",
+      "name": "pull-up-b-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/c/execute/pullUp"
+      },
+      "id": "e7a961c5-6f53-466b-a0d3-8362221ab78b",
+      "lastModified": "2017-10-25T23:05:20.590+02:00",
+      "name": "pull-up-c-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/d/execute/pullUp"
+      },
+      "id": "8d856b65-9220-48b9-92ba-9343cfed3250",
+      "lastModified": "2017-10-25T23:05:26.914+02:00",
+      "name": "pull-up-d-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/pullDown"
+      },
+      "id": "9aec0515-25c2-48f8-815a-0985e97d7e50",
+      "lastModified": "2017-10-25T23:05:33.018+02:00",
+      "name": "pullDown-all",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/pullUp"
+      },
+      "id": "e67dc9a9-ca6d-4436-b4d7-41221ee93a75",
+      "lastModified": "2017-10-25T23:05:40.212+02:00",
+      "name": "pullUp-all",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+        "name": "PUT"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/a/execute/stop"
+      },
+      "id": "6e060609-84ea-4192-88ca-90b4a1ed0070",
+      "lastModified": "2017-10-25T23:05:47.285+02:00",
+      "name": "stop-movment",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/blinds/limits/switches"
+      },
+      "id": "ecb6fd6d-319e-4271-b91f-ad856cac7895",
+      "lastModified": "2017-10-26T00:19:38.471+02:00",
+      "name": "switches-raport",
+      "headers": [],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded"
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${host}",
+        "path": "/api/tasks"
+      },
+      "id": "567e456f-434f-4227-93d7-7f16216ba75b",
+      "lastModified": "2017-10-25T23:05:59.886+02:00",
+      "name": "tasks",
+      "headers": [],
+      "metaInfo": {},
+      "parentId": "5fe2d55f-a07c-4a96-a6bb-43a08d4c5d88"
+    },
+    {
+      "type": "Context",
+      "id": "eb37ecb9-70d1-43ec-856d-c5016d8d78b3",
+      "lastModified": "2017-10-15T18:41:52.359+02:00",
+      "name": "rpi-sensonation",
+      "variables": [
+        {
+          "enabled": true,
+          "name": "host",
+          "value": "192.168.1.103"
+        }
+      ]
+    }
+  ]
+}

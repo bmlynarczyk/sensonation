@@ -1,37 +1,32 @@
-package com.sensonation.domain;
+package com.sensonation.config.prod;
 
 import com.google.common.collect.ImmutableMap;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.GpioProvider;
 import com.sensonation.application.McpInputFactory;
 import com.sensonation.application.McpOutputFactory;
+import com.sensonation.domain.BlindDriver;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
-public class BlindDriversProvider implements Supplier<Map<String, BlindDriver>> {
+public class BlindsDriversConfig {
 
     private final McpOutputFactory mcpOutputFactory;
 
     private final McpInputFactory mcpInputFactory;
 
-    public final GpioProvider mcpA;
+    private final GpioProvider mcpA;
 
-    private final ImmutableMap<String, BlindDriver> blinds;
+    private final ImmutableMap<String, BlindDriver> config;
 
-    public BlindDriversProvider(McpOutputFactory mcpOutputFactory, McpInputFactory mcpInputFactory, GpioProvider mcpA) {
+    public BlindsDriversConfig(McpOutputFactory mcpOutputFactory, McpInputFactory mcpInputFactory, GpioProvider mcpA) {
         this.mcpOutputFactory = mcpOutputFactory;
         this.mcpInputFactory = mcpInputFactory;
         this.mcpA = mcpA;
-        blinds = populateBlinds();
+        config = createConfig();
     }
 
-    @Override
-    public Map<String, BlindDriver> get() {
-        return blinds;
-    }
-
-    private ImmutableMap<String, BlindDriver> populateBlinds() {
+    private ImmutableMap<String, BlindDriver> createConfig() {
         return ImmutableMap.of(
                 "a", BlindDriver.builder()
                         .name("a")
@@ -62,5 +57,9 @@ public class BlindDriversProvider implements Supplier<Map<String, BlindDriver>> 
                         .pullUpLimitSwitch(mcpInputFactory.createInput(mcpA, MCP23017Pin.GPIO_A0))
                         .build()
         );
+    }
+
+    public Map<String, BlindDriver> get() {
+        return config;
     }
 }
