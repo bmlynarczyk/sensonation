@@ -46,6 +46,10 @@ public class BlindLimitSwitchesExpositor {
         return states.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
+    public BlindLimitSwitchState getState(String blindName) {
+        return states.get(blindName);
+    }
+
     public String getState(BlindDriver blindDriver) {
         return MessageFormat.format("in | {0} | pull down limit | {1} | reached, pull up limit | {2} | reached",
                 blindDriver.getName(),

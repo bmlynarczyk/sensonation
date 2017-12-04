@@ -1,6 +1,8 @@
-package com.sensonation.domain;
+package com.sensonation.application;
 
-import com.sensonation.application.BlindDriversProvider;
+import com.google.common.collect.ImmutableMap;
+import com.sensonation.domain.BlindDriver;
+import com.sensonation.domain.BlindEvent;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -23,15 +25,23 @@ public class BlindActionsExecutor {
 
     public BlindActionsExecutor(BlindDriversProvider blindsProvider) {
         this.blinds = blindsProvider.get();
-        this.actions = new BlindActionsProvider().get();
+        this.actions = ImmutableMap.of(
+                "pullDown", BlindDriver::pullDown,
+                "pullUp", BlindDriver::pullUp,
+                "stop", BlindDriver::stop
+        );
     }
 
-    public void executeFor(String blindName, String actionName) {
-        BlindDriver blindDriver = blinds.computeIfAbsent(blindName, THROW_NO_BLIND_FOUND);
-        actions.getOrDefault(actionName, THROW_ILLEGAL_ACTION_EXCEPTION).accept(blindDriver);
+    boolean shouldExecute(BlindEvent blindEvent) {
+        return actions.keySet().contains(blindEvent.getActionName());
     }
 
-    public void stopAll() {
+    void execute(BlindEvent blindEvent) {
+        BlindDriver blindDriver = blinds.computeIfAbsent(blindEvent.getBlindName(), THROW_NO_BLIND_FOUND);
+        actions.getOrDefault(blindEvent.getActionName(), THROW_ILLEGAL_ACTION_EXCEPTION).accept(blindDriver);
+    }
+
+    void stopAll() {
         blinds.values().forEach(BlindDriver::stop);
     }
 }

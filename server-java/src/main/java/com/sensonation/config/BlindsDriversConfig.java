@@ -1,4 +1,4 @@
-package com.sensonation.config.prod;
+package com.sensonation.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;

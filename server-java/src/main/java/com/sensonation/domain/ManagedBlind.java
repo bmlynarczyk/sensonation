@@ -1,9 +1,10 @@
 package com.sensonation.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import static java.lang.Thread.sleep;
 
 @AllArgsConstructor
 @Builder
@@ -15,19 +16,8 @@ public class ManagedBlind {
     private final String name;
     private Boolean active;
 
-    public boolean isActive(){
+    public boolean isActive() {
         return active;
-    }
-
-    public void activate(){
-        active = true;
-        log.info("blind {} has been activated", name);
-    }
-
-
-    public void deactivate(){
-        active = false;
-        log.info("blind {} has been deactivated", name);
     }
 
 }

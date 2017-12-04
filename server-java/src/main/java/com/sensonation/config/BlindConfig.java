@@ -1,4 +1,4 @@
-package com.sensonation.config.prod;
+package com.sensonation.config;
 
 import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.io.gpio.GpioController;
@@ -83,8 +83,9 @@ public class BlindConfig {
     @Bean
     public BlindLimitSwitchesMonitor limitSwitchesMonitor(BlindDriversProvider blindDriversProvider,
                                                           TaskExecutor taskExecutor,
-                                                          BlindLimitSwitchesExpositor blindLimitSwitchesExpositor){
-        return new BlindLimitSwitchesMonitor(blindDriversProvider, taskExecutor, blindLimitSwitchesExpositor);
+                                                          BlindLimitSwitchesExpositor blindLimitSwitchesExpositor,
+                                                          BlindService blindService){
+        return new BlindLimitSwitchesMonitor(blindDriversProvider, taskExecutor, blindLimitSwitchesExpositor, blindService);
     }
 
     @Bean
@@ -93,18 +94,23 @@ public class BlindConfig {
     }
 
     @Bean
-    public BlindEventRouter blindEventRouter(TaskExecutor taskExecutor,
-                                             ArrayBlockingQueue<BlindEvent> blindEvents,
-                                             BlindActionsExecutor blindActionsExecutor,
-                                             BlindLimitSwitchesMonitor blindLimitSwitchesMonitor){
-        return new BlindEventRouter(taskExecutor, blindEvents, blindActionsExecutor, blindLimitSwitchesMonitor);
+    public BlindLimitSwitchesMonitorActionsExecutor blindLimitSwitchesMonitorActionExecutor(BlindLimitSwitchesMonitor blindLimitSwitchesMonitor){
+        return new BlindLimitSwitchesMonitorActionsExecutor(blindLimitSwitchesMonitor);
+    }
+
+    @Bean
+    public BlindEventBus blindEventBus(TaskExecutor taskExecutor,
+                                       ArrayBlockingQueue<BlindEvent> blindEvents,
+                                       BlindActionsExecutor blindActionsExecutor,
+                                       BlindLimitSwitchesMonitorActionsExecutor blindLimitSwitchesMonitorActionsExecutor){
+        return new BlindEventBus(taskExecutor, blindEvents, blindActionsExecutor, blindLimitSwitchesMonitorActionsExecutor);
     }
 
     @Bean
     public BlindService blindService(Supplier<Map<String, ManagedBlind>> managedBlindsProvider,
                                      ArrayBlockingQueue<BlindEvent> blindEvents,
                                      BlindStopper blindStopper){
-        return new BlindServiceImpl(managedBlindsProvider, blindEvents, blindStopper);
+        return new BlindService(managedBlindsProvider, blindEvents, blindStopper);
     }
 
     @Bean

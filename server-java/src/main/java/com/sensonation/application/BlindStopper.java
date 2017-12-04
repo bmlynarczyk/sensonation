@@ -1,6 +1,5 @@
 package com.sensonation.application;
 
-import com.sensonation.domain.BlindActionsExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 public class BlindStopper {

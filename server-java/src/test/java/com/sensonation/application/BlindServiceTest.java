@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class BlindServiceImplTest {
+public class BlindServiceTest {
 
     private final Supplier blindsProvider = mock(Supplier.class);
     private final BlockingDeque blindEvents = mock(BlockingDeque.class);
@@ -28,7 +28,7 @@ public class BlindServiceImplTest {
     public void should_throw_exception_when_blind_doesnt_exist(){
 //        given
         when(blindsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindServiceImpl blindService = new BlindServiceImpl(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
 //        when
 //        then
         assertThatThrownBy(() -> blindService.executeFor("blindName", "stop")).isInstanceOf(NoSuchElementException.class);
@@ -39,7 +39,7 @@ public class BlindServiceImplTest {
 //        given
         final ManagedBlind managedBlind = ManagedBlind.builder().name("blindName").build();
         when(blindsProvider.get()).thenReturn(ImmutableMap.of("blindName", managedBlind));
-        final BlindServiceImpl blindService = new BlindServiceImpl(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
 //        when
 //        then
         assertThatThrownBy(() -> blindService.executeFor("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
@@ -50,7 +50,7 @@ public class BlindServiceImplTest {
 //        given
         final ManagedBlind managedBlind = ManagedBlind.builder().name("blindName").active(true).build();
         when(blindsProvider.get()).thenReturn(ImmutableMap.of("blindName", managedBlind));
-        final BlindServiceImpl blindService = new BlindServiceImpl(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
 //        when
         blindService.executeFor("blindName", "stop");
 //        then

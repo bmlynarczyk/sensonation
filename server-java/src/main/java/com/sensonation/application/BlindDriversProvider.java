@@ -1,6 +1,6 @@
 package com.sensonation.application;
 
-import com.sensonation.config.prod.BlindsDriversConfig;
+import com.sensonation.config.BlindsDriversConfig;
 import com.sensonation.domain.BlindDriver;
 
 import java.util.Map;

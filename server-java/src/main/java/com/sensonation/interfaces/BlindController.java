@@ -42,6 +42,16 @@ public class BlindController {
         blindService.pullDownAllBlinds();
     }
 
+    @RequestMapping(value = "/{name}/activate", method = PUT)
+    public void activate(@PathVariable("name") String blindName) {
+        blindService.activate(blindName);
+    }
+
+    @RequestMapping(value = "/{name}/deactivate", method = PUT)
+    public void deactivate(@PathVariable("name") String blindName) {
+        blindService.deactivate(blindName);
+    }
+
     @RequestMapping(method = GET)
     public List<BlindRepresentation> get() {
         return blindsProvider.get().entrySet().stream()

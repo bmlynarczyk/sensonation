@@ -22,41 +22,45 @@ public class BlindDriver {
     private final AtomicBoolean stopped = new AtomicBoolean(true);
 
     @SneakyThrows
-    void pullDown(){
-        log.info("pull down {}", name);
-        stopped.set(false);
-        firstOutput.setLow();
-        sleep(500);
-        secondOutput.setHigh();
-        while (stillPullingDown() && !isStopped())
-            sleep(50);
-        stop();
+    public void pullDown() {
+        if (!isPullDownLimitReached()) {
+            log.info("pull down {}", name);
+            stopped.set(false);
+            firstOutput.setLow();
+            sleep(500);
+            secondOutput.setHigh();
+            while (stillPullingDown() && !isStopped())
+                sleep(50);
+            stop();
+        }
     }
 
     @SneakyThrows
-    void pullUp() {
-        log.info("pull up {}", name);
-        stopped.set(false);
-        secondOutput.setLow();
-        sleep(500);
-        firstOutput.setHigh();
-        while (stillPullingUp() && !isStopped())
-            sleep(50);
-        stop();
+    public void pullUp() {
+        if (!isPullUpLimitReached()) {
+            log.info("pull up {}", name);
+            stopped.set(false);
+            secondOutput.setLow();
+            sleep(500);
+            firstOutput.setHigh();
+            while (stillPullingUp() && !isStopped())
+                sleep(50);
+            stop();
+        }
     }
 
-    void stop(){
+    public void stop() {
         log.info("stop movement of {}", name);
         firstOutput.setLow();
         secondOutput.setLow();
         stopped.set(true);
     }
 
-    public boolean isPullDownLimitReached(){
+    public boolean isPullDownLimitReached() {
         return !pullDownLimitSwitch.isOpen();
     }
 
-    public boolean isPullUpLimitReached(){
+    public boolean isPullUpLimitReached() {
         return !pullUpLimitSwitch.isOpen();
     }
 
