@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class BlindActionsExecutor {
+public class BlindActionsExecutor implements ActionsExecutor {
 
     private static final Consumer<BlindDriver> THROW_ILLEGAL_ACTION_EXCEPTION = blind -> {
         throw new IllegalArgumentException("unknown action");
@@ -32,16 +32,13 @@ public class BlindActionsExecutor {
         );
     }
 
-    boolean shouldExecute(BlindEvent blindEvent) {
+    public boolean shouldExecute(BlindEvent blindEvent) {
         return actions.keySet().contains(blindEvent.getActionName());
     }
 
-    void execute(BlindEvent blindEvent) {
+    public void execute(BlindEvent blindEvent) {
         BlindDriver blindDriver = blinds.computeIfAbsent(blindEvent.getBlindName(), THROW_NO_BLIND_FOUND);
         actions.getOrDefault(blindEvent.getActionName(), THROW_ILLEGAL_ACTION_EXCEPTION).accept(blindDriver);
     }
 
-    void stopAll() {
-        blinds.values().forEach(BlindDriver::stop);
-    }
 }

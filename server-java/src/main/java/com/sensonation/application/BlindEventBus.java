@@ -1,23 +1,30 @@
 package com.sensonation.application;
 
+import com.google.common.base.Stopwatch;
 import com.sensonation.domain.BlindEvent;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.restart.RestartEndpoint;
 import org.springframework.core.task.TaskExecutor;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.List;
+import java.util.concurrent.*;
 
+@Slf4j
 public class BlindEventBus {
 
     private final BlockingQueue<BlindEvent> blindEvents;
-    private final BlindActionsExecutor blindActionsExecutor;
-    private final BlindLimitSwitchesMonitorActionsExecutor blindLimitSwitchesMonitorActionsExecutor;
+    private final List<ActionsExecutor> actionsExecutors;
+    private Integer timeoutInSeconds;
+    private RestartEndpoint restartEndpoint;
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
     public BlindEventBus(TaskExecutor taskExecutor, BlockingQueue<BlindEvent> blindEvents,
-                         BlindActionsExecutor blindActionsExecutor,
-                         BlindLimitSwitchesMonitorActionsExecutor blindLimitSwitchesMonitorActionsExecutor) {
+                         List<ActionsExecutor> actionsExecutors, Integer timeoutInSeconds, RestartEndpoint restartEndpoint) {
         this.blindEvents = blindEvents;
-        this.blindActionsExecutor = blindActionsExecutor;
-        this.blindLimitSwitchesMonitorActionsExecutor = blindLimitSwitchesMonitorActionsExecutor;
+        this.actionsExecutors = actionsExecutors;
+        this.timeoutInSeconds = timeoutInSeconds;
+        this.restartEndpoint = restartEndpoint;
         taskExecutor.execute(this::run);
     }
 
@@ -25,15 +32,22 @@ public class BlindEventBus {
     private void run() {
         while (true) {
             BlindEvent blindEvent = blindEvents.take();
-            forward(blindEvent);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.start();
+            try{
+                executorService.submit(() -> forward(blindEvent)).get(timeoutInSeconds, TimeUnit.SECONDS);
+                log.info("event {} executed in {}", blindEvent.getActionName(), stopwatch.toString());
+            } catch (TimeoutException e){
+                log.info("timeout of {} second occurs for event {} execution", blindEvent.getActionName(), timeoutInSeconds);
+                restartEndpoint.restart();
+            }
         }
     }
 
-    public void forward(BlindEvent blindEvent) {
-        if (blindActionsExecutor.shouldExecute(blindEvent))
-            blindActionsExecutor.execute(blindEvent);
-        if (blindLimitSwitchesMonitorActionsExecutor.shouldExecute(blindEvent))
-            blindLimitSwitchesMonitorActionsExecutor.execute(blindEvent);
+    private void forward(BlindEvent blindEvent) {
+        actionsExecutors.stream()
+                .filter(actionsExecutor -> actionsExecutor.shouldExecute(blindEvent))
+                .forEach(actionsExecutor -> actionsExecutor.execute(blindEvent));
     }
 
 

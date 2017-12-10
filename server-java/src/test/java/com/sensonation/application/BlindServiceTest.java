@@ -17,18 +17,18 @@ public class BlindServiceTest {
 
     private final Supplier blindsProvider = mock(Supplier.class);
     private final BlockingDeque blindEvents = mock(BlockingDeque.class);
-    private final BlindStopper blindStopper = mock(BlindStopper.class);
+    private final BlindStopperService blindStopperService = mock(BlindStopperService.class);
 
     @Before
     public void setUp(){
-        reset(blindsProvider, blindEvents, blindStopper);
+        reset(blindsProvider, blindEvents, blindStopperService);
     }
 
     @Test
     public void should_throw_exception_when_blind_doesnt_exist(){
 //        given
         when(blindsProvider.get()).thenReturn(ImmutableMap.of());
-        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopperService);
 //        when
 //        then
         assertThatThrownBy(() -> blindService.executeFor("blindName", "stop")).isInstanceOf(NoSuchElementException.class);
@@ -39,7 +39,7 @@ public class BlindServiceTest {
 //        given
         final ManagedBlind managedBlind = ManagedBlind.builder().name("blindName").build();
         when(blindsProvider.get()).thenReturn(ImmutableMap.of("blindName", managedBlind));
-        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopperService);
 //        when
 //        then
         assertThatThrownBy(() -> blindService.executeFor("blindName", "actionName")).isInstanceOf(IllegalArgumentException.class);
@@ -50,12 +50,12 @@ public class BlindServiceTest {
 //        given
         final ManagedBlind managedBlind = ManagedBlind.builder().name("blindName").active(true).build();
         when(blindsProvider.get()).thenReturn(ImmutableMap.of("blindName", managedBlind));
-        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopper);
+        final BlindService blindService = new BlindService(blindsProvider, blindEvents, blindStopperService);
 //        when
         blindService.executeFor("blindName", "stop");
 //        then
         verify(blindEvents, times(1)).drainTo(any());
-        verify(blindStopper, times(1)).stop();
+        verify(blindStopperService, times(1)).stop();
     }
 
 }

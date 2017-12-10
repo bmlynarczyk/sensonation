@@ -29,44 +29,35 @@ public class BlindService {
 
     private final Map<String, ManagedBlind> blinds;
     private final BlockingQueue<BlindEvent> blindEvents;
-    private final BlindStopper blindStopper;
+    private final BlindStopperService blindStopperService;
 
     public BlindService(Supplier<Map<String, ManagedBlind>> blindsProvider,
                         BlockingQueue<BlindEvent> blindEvents,
-                        BlindStopper blindStopper) {
+                        BlindStopperService blindStopperService) {
         this.blinds = blindsProvider.get();
         this.blindEvents = blindEvents;
-        this.blindStopper = blindStopper;
+        this.blindStopperService = blindStopperService;
     }
 
     public void executeFor(String blindName, String actionName) {
         if (!isSupported(actionName))
             throw new IllegalArgumentException("unsupported action");
         ManagedBlind blind = getBlind(blindName);
-        switchMonitor();
         confirmedExecuteFor(blind, actionName);
-        switchMonitor();
-
     }
 
     public void pullUpAllBlinds() {
-        switchMonitor();
         blinds.values()
                 .stream()
                 .filter(ManagedBlind::isActive)
-                .forEach(blind -> publishBlindEvent(blind.getName(), "pullUp"));
-        switchMonitor();
-        pullUpUnfinishedBlinds();
+                .forEach(blind -> publishBlindPullUp(blind.getName()));
     }
 
     public void pullDownAllBlinds() {
-        switchMonitor();
         blinds.values()
                 .stream()
                 .filter(ManagedBlind::isActive)
-                .forEach(blind -> publishBlindEvent(blind.getName(), "pullDown"));
-        switchMonitor();
-        pullDownUnfinishedBlinds();
+                .forEach(blind -> publishBlindPullDown(blind.getName()));
     }
 
     public void activate(String blindName) {
@@ -81,35 +72,20 @@ public class BlindService {
         log.info("blind {} has been deactivate", blind.getName());
     }
 
-    @SneakyThrows
-    void pullUpUnfinishedBlinds() {
-        blindEvents.put(BlindEvent.builder().actionName("pullUpUnfinishedBlinds").build());
-    }
-
-    @SneakyThrows
-    void pullDownUnfinishedBlinds() {
-        blindEvents.put(BlindEvent.builder().actionName("pullDownUnfinishedBlinds").build());
-    }
-
-    @SneakyThrows
-    private void switchMonitor() {
-        blindEvents.put(BlindEvent.builder().actionName("switchMonitor").build());
-    }
-
-    private void stopMovement() {
+    public void stopMovement() {
         log.info("stop blinds movement");
         blindEvents.drainTo(Lists.newArrayList());
-        blindStopper.stop();
+        blindStopperService.stop();
     }
 
-    private void publishBlindPullDown(String blindName) {
-        log.info("call pull down for blind {}", blindName);
+    void publishBlindPullDown(String blindName) {
+        log.info("call pull down action for blind {}", blindName);
         publishBlindEvent(blindName, "pullDown");
         pullUnfinishedBlind(blindName, "pullDownUnfinishedBlind");
     }
 
-    private void publishBlindPullUp(String blindName) {
-        log.info("call pull up for blind {}", blindName);
+    void publishBlindPullUp(String blindName) {
+        log.info("call pull up action for blind {}", blindName);
         publishBlindEvent(blindName, "pullUp");
         pullUnfinishedBlind(blindName, "pullUpUnfinishedBlind");
     }
@@ -131,7 +107,7 @@ public class BlindService {
     }
 
     @SneakyThrows
-    void publishBlindEvent(String blindName, String actionName) {
+    private void publishBlindEvent(String blindName, String actionName) {
         blindEvents.put(BlindEvent.builder().blindName(blindName).actionName(actionName).build());
     }
 

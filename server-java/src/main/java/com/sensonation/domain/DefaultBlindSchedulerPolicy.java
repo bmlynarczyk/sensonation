@@ -1,7 +1,6 @@
 package com.sensonation.domain;
 
 import com.sensonation.application.SunService;
-import com.sensonation.domain.BlindSchedulerPolicy;
 
 import java.time.*;
 import java.util.Optional;

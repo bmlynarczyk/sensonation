@@ -4,6 +4,7 @@ import com.sensonation.config.BlindsDriversConfig;
 import com.sensonation.domain.BlindDriver;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BlindDriversProvider {
 
@@ -14,7 +15,7 @@ public class BlindDriversProvider {
     }
 
     public Map<String, BlindDriver> get() {
-        return config.get();
+        return new ConcurrentHashMap<>(config.get());
     }
 
 }

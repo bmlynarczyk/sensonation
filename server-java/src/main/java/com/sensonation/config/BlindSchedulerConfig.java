@@ -1,16 +1,14 @@
 package com.sensonation.config;
 
-import com.sensonation.application.*;
+import com.sensonation.application.BlindScheduler;
+import com.sensonation.application.BlindService;
+import com.sensonation.application.SunService;
 import com.sensonation.domain.DefaultBlindSchedulerPolicy;
-import com.sensonation.interfaces.TaskController;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-
-import java.util.Map;
-import java.util.function.Supplier;
 
 import static java.time.Clock.systemDefaultZone;
 
@@ -19,7 +17,7 @@ import static java.time.Clock.systemDefaultZone;
 public class BlindSchedulerConfig {
 
     @Bean
-    TaskScheduler taskScheduler(){
+    TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setRemoveOnCancelPolicy(true);
         threadPoolTaskScheduler.setPoolSize(4);
@@ -27,19 +25,14 @@ public class BlindSchedulerConfig {
     }
 
     @Bean
-    SunService sunService(){
+    SunService sunService() {
         return new SunService(systemDefaultZone());
     }
 
     @Bean
-    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindService blindService, SunService sunService){
+    BlindScheduler blindScheduler(TaskScheduler taskScheduler, BlindService blindService, SunService sunService) {
         DefaultBlindSchedulerPolicy policy = new DefaultBlindSchedulerPolicy(sunService, systemDefaultZone());
         return new BlindScheduler(policy, taskScheduler, blindService, sunService);
-    }
-
-    @Bean
-    TaskController taskController(BlindScheduler blindScheduler){
-        return new TaskController(blindScheduler);
     }
 
 }

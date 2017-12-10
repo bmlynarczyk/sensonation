@@ -47,6 +47,8 @@ dependencies {
 	compile 'com.pi4j:pi4j-gpio-extension:1.0'
 	compile 'org.springframework.boot:spring-boot-starter'
 	compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-actuator'
+	compile 'org.springframework.cloud:spring-cloud-context:1.1.2.RELEASE'
 	compile 'org.projectlombok:lombok:1.16.8'
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
