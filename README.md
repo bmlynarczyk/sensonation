@@ -26,7 +26,19 @@ From hardware perpective Sensonation works on [raspberry pi model b](https://www
 
 DC engines are controlled by [DRV8833 Dual Motor Driver Carrier](https://www.pololu.com/product/2130).
 
-For leaving more free inputs/outputs on Raspberry Pi Sensonation uses [MCP23017 expander](http://ww1.microchip.com/downloads/en/DeviceDoc/21952b.pdf)
+Raspberry Pi inputs and outputs are not inafe for  Sensonation. [MCP23017 expander](https://cdn-shop.adafruit.com/datasheets/mcp23017.pdf) gives possibility to extend inputs and outputs to required count.
+
+Current configuration uses two expanders, which works on unique addresses defined by A0, A1, A2 pins state. First expander works on 21 address second one on 24.
+
+![MCP23017-addresspins1](MCP23017-addresspins1.jpg)  
+
+### Hardware Fritzing Project 
+
+[Fritzing](http://fritzing.org) project is placed in hardware catalog. Below picture of hardware.
+
+### 
+
+![sensonation-v2](sensonation-v2.png)
 
 ### Build tutorial
 

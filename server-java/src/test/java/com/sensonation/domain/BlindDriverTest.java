@@ -9,8 +9,8 @@ public class BlindDriverTest {
 
     McpOutput firstOutput = mock(McpOutput.class);
     McpOutput secondOutput = mock(McpOutput.class);
-    McpInput firstInput = mock(McpInput.class);
-    McpInput secondInput = mock(McpInput.class);
+    BlindLimitSwitch firstInput = mock(BlindLimitSwitch.class);
+    BlindLimitSwitch secondInput = mock(BlindLimitSwitch.class);
 
     @Before
     public void setUp(){
@@ -20,7 +20,7 @@ public class BlindDriverTest {
     @Test
     public void should_pulled_down_using_outputs_and_input(){
 //        given
-        BlindDriver blindDriver = BlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
+        BlindDriver blindDriver = CustomServoBlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
 //        when
         when(firstInput.isOpen()).thenReturn(true, false);
         blindDriver.pullDown();
@@ -31,7 +31,7 @@ public class BlindDriverTest {
     @Test
     public void should_pulled_up_using_outputs_and_input(){
 //        given
-        BlindDriver blindDriver = BlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
+        BlindDriver blindDriver = CustomServoBlindDriver.builder().name("test").firstOutput(firstOutput).secondOutput(secondOutput).pullDownLimitSwitch(firstInput).pullUpLimitSwitch(secondInput).build();
 //        when
         when(secondInput.isOpen()).thenReturn(true, false);
         blindDriver.pullUp();

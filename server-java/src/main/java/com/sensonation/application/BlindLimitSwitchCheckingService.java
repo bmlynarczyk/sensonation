@@ -31,7 +31,7 @@ public class BlindLimitSwitchCheckingService {
     private static final String IS_NOT = "isn't";
 
     private final Clock clock;
-    private final Map<String, BlindLimitSwitchState> states;
+    private final ConcurrentHashMap<String, BlindLimitSwitchState> states;
     private final Collection<BlindDriver> blinds;
 
     public BlindLimitSwitchCheckingService(BlindDriversProvider blindDriversProvider, Clock clock, TaskExecutor taskExecutor) {
@@ -46,10 +46,6 @@ public class BlindLimitSwitchCheckingService {
 
     Set<BlindLimitSwitchState> getStates() {
         return states.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
-    }
-
-    BlindLimitSwitchState getState(String blindName) {
-        return states.get(blindName);
     }
 
     void reportState(BlindDriver blindDriver) {

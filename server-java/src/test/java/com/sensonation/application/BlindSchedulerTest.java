@@ -49,19 +49,6 @@ public class BlindSchedulerTest {
     }
 
     @Test
-    public void test_initialisation_after_sunset_and_before_1_am(){
-        when(clock.instant()).thenReturn(getDate(2016, 8, 23, 0, 59));
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
-
-        BlindScheduler blindScheduler = new BlindScheduler(schedulerPolicy, taskScheduler, blindActionsExecutor, sunService);
-        Map<ScheduledTaskName, ScheduledTask> scheduledTasks = blindScheduler.getScheduledTasks();
-
-        verify(taskScheduler, times(1)).schedule(Matchers.any(Runnable.class), (Date) Matchers.anyObject());
-        assertThat(scheduledTasks.size()).isEqualTo(1);
-        assertThat(scheduledTasks.get(ScheduledTaskName.RECALC).getExecutionDate()).isEqualTo(sunService.tomorrowAt1Am());
-    }
-
-    @Test
     public void test_initialisation_when_now_is_after_sunrise(){
         when(clock.instant()).thenReturn(getDate(2016, 8, 23, 8, 0));
         when(clock.getZone()).thenReturn(ZoneId.systemDefault());

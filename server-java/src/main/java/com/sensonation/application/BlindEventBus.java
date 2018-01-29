@@ -1,10 +1,10 @@
 package com.sensonation.application;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.sensonation.domain.BlindEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.context.restart.RestartEndpoint;
 import org.springframework.core.task.TaskExecutor;
 
 import java.util.List;
@@ -16,15 +16,13 @@ public class BlindEventBus {
     private final BlockingQueue<BlindEvent> blindEvents;
     private final List<ActionsExecutor> actionsExecutors;
     private Integer timeoutInSeconds;
-    private RestartEndpoint restartEndpoint;
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
     public BlindEventBus(TaskExecutor taskExecutor, BlockingQueue<BlindEvent> blindEvents,
-                         List<ActionsExecutor> actionsExecutors, Integer timeoutInSeconds, RestartEndpoint restartEndpoint) {
+                         List<ActionsExecutor> actionsExecutors, Integer timeoutInSeconds) {
         this.blindEvents = blindEvents;
         this.actionsExecutors = actionsExecutors;
         this.timeoutInSeconds = timeoutInSeconds;
-        this.restartEndpoint = restartEndpoint;
         taskExecutor.execute(this::run);
     }
 
@@ -39,7 +37,8 @@ public class BlindEventBus {
                 log.info("event {} executed in {}", blindEvent.getActionName(), stopwatch.toString());
             } catch (TimeoutException e){
                 log.info("timeout of {} second occurs for event {} execution", blindEvent.getActionName(), timeoutInSeconds);
-                restartEndpoint.restart();
+                blindEvents.drainTo(Lists.newArrayList());
+                blindEvents.put(BlindEvent.builder().actionName("blindsTimeoutStop").build());
             }
         }
     }

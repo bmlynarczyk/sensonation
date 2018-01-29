@@ -3,6 +3,7 @@ package com.sensonation.application;
 import com.google.common.collect.ImmutableMap;
 import com.sensonation.domain.BlindDriver;
 import com.sensonation.domain.BlindEvent;
+import com.sensonation.domain.CustomServoBlindDriver;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,7 +44,7 @@ public class BlindActionsExecutorTest {
     @Test
     public void should_throw_exception_when_action_is_unsupported() {
 //        given
-        final BlindDriver blindDriver = BlindDriver.builder().build();
+        final BlindDriver blindDriver = CustomServoBlindDriver.builder().build();
         when(blindsSupplier.get()).thenReturn(ImmutableMap.of("blindName", blindDriver));
         final BlindActionsExecutor blindActionsExecutor = new BlindActionsExecutor(blindsSupplier);
         BlindEvent blindEvent = BlindEvent.builder().blindName("blindName").actionName("actionName").build();

@@ -24,6 +24,7 @@ public class ManagedBlindsProvider implements Supplier<Map<String, ManagedBlind>
         map.put("b", ManagedBlind.builder().name("b").active(true).build());
         map.put("c", ManagedBlind.builder().name("c").active(true).build());
         map.put("d", ManagedBlind.builder().name("d").active(true).build());
+        map.put("e", ManagedBlind.builder().name("e").active(true).build());
         return map;
     }
 }

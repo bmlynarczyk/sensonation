@@ -2,8 +2,6 @@ package com.sensonation;
 
 import com.sensonation.config.*;
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
-import org.springframework.cloud.autoconfigure.RefreshEndpointAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -15,9 +13,7 @@ import org.springframework.context.annotation.Import;
         ControllerConfig.class,
         GpioConfig.class,
         BlindEventConfig.class,
-        WebConfig.class,
-        RefreshAutoConfiguration.class,
-        RefreshEndpointAutoConfiguration.class
+        WebConfig.class
 })
 public class ServerApplication {
 

@@ -1,79 +1,23 @@
 package com.sensonation.domain;
 
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+public interface BlindDriver {
 
-import java.util.concurrent.atomic.AtomicBoolean;
+    void pullDown();
 
-import static java.lang.Thread.sleep;
+    void pullUp();
 
-@AllArgsConstructor
-@Builder
-@EqualsAndHashCode
-@Slf4j
-public class BlindDriver {
+    void stop();
 
-    @Getter
-    private final String name;
-    private final McpOutput firstOutput;
-    private final McpOutput secondOutput;
-    private final McpInput pullDownLimitSwitch;
-    private final McpInput pullUpLimitSwitch;
-    private final AtomicBoolean stopped = new AtomicBoolean(true);
+    boolean isPullDownLimitReached();
 
-    @SneakyThrows
-    public void pullDown() {
-        if (!isPullDownLimitReached()) {
-            log.info("pull down {}", name);
-            stopped.set(false);
-            firstOutput.setLow();
-            sleep(500);
-            secondOutput.setHigh();
-            while (stillPullingDown() && !isStopped())
-                sleep(50);
-            stop();
-        }
-    }
+    boolean isPullUpLimitReached();
 
-    @SneakyThrows
-    public void pullUp() {
-        if (!isPullUpLimitReached()) {
-            log.info("pull up {}", name);
-            stopped.set(false);
-            secondOutput.setLow();
-            sleep(500);
-            firstOutput.setHigh();
-            while (stillPullingUp() && !isStopped())
-                sleep(50);
-            stop();
-        }
-    }
+    boolean stillPullingDown();
 
-    public void stop() {
-        log.info("stop movement of {}", name);
-        firstOutput.setLow();
-        secondOutput.setLow();
-        stopped.set(true);
-    }
+    boolean stillPullingUp();
 
-    public boolean isPullDownLimitReached() {
-        return !pullDownLimitSwitch.isOpen();
-    }
+    boolean isStopped();
 
-    public boolean isPullUpLimitReached() {
-        return !pullUpLimitSwitch.isOpen();
-    }
-
-    private boolean stillPullingDown() {
-        return pullDownLimitSwitch.isOpen();
-    }
-
-    private boolean stillPullingUp() {
-        return pullUpLimitSwitch.isOpen();
-    }
-
-    private boolean isStopped() {
-        return stopped.get();
-    }
+    String getName();
 
 }

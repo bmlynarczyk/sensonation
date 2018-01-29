@@ -1,7 +1,6 @@
 package com.sensonation.application;
 
 import com.pi4j.io.gpio.*;
-import com.sensonation.domain.McpInput;
 import com.sensonation.domain.McpOutput;
 
 public class McpOutputFactory {

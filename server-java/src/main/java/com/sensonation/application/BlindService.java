@@ -23,8 +23,8 @@ public class BlindService {
 
     private final Map<String, Consumer<String>> actionPublishers = ImmutableMap.of(
             "stop", (blindName) -> stopMovement(),
-            "pullUp", this::publishBlindPullUp,
-            "pullDown", this::publishBlindPullDown
+            "pullUp", this::auditedPublishBlindPullUp,
+            "pullDown", this::auditedPublishBlindPullDown
     );
 
     private final Map<String, ManagedBlind> blinds;
@@ -46,18 +46,22 @@ public class BlindService {
         confirmedExecuteFor(blind, actionName);
     }
 
+    @SneakyThrows
     public void pullUpAllBlinds() {
         blinds.values()
                 .stream()
                 .filter(ManagedBlind::isActive)
-                .forEach(blind -> publishBlindPullUp(blind.getName()));
+                .map(ManagedBlind::getName)
+                .forEach(this::publishBlindPullUp);
     }
 
+    @SneakyThrows
     public void pullDownAllBlinds() {
         blinds.values()
                 .stream()
                 .filter(ManagedBlind::isActive)
-                .forEach(blind -> publishBlindPullDown(blind.getName()));
+                .map(ManagedBlind::getName)
+                .forEach(this::publishBlindPullDown);
     }
 
     public void activate(String blindName) {
@@ -72,22 +76,34 @@ public class BlindService {
         log.info("blind {} has been deactivate", blind.getName());
     }
 
-    public void stopMovement() {
+    @SneakyThrows
+    private void stopMovement() {
         log.info("stop blinds movement");
         blindEvents.drainTo(Lists.newArrayList());
         blindStopperService.stop();
     }
 
-    void publishBlindPullDown(String blindName) {
+    @SneakyThrows
+    private void auditedPublishBlindPullDown(String blindName) {
         log.info("call pull down action for blind {}", blindName);
         publishBlindEvent(blindName, "pullDown");
-        pullUnfinishedBlind(blindName, "pullDownUnfinishedBlind");
     }
 
-    void publishBlindPullUp(String blindName) {
+    private void publishBlindPullDown(String blindName) {
+        log.info("call pull down action for blind {}", blindName);
+        publishBlindEvent(blindName, "pullDown");
+    }
+
+    @SneakyThrows
+    private void auditedPublishBlindPullUp(String blindName) {
         log.info("call pull up action for blind {}", blindName);
         publishBlindEvent(blindName, "pullUp");
-        pullUnfinishedBlind(blindName, "pullUpUnfinishedBlind");
+
+    }
+
+    private void publishBlindPullUp(String blindName) {
+        log.info("call pull up action for blind {}", blindName);
+        publishBlindEvent(blindName, "pullUp");
     }
 
     private boolean isSupported(String actionName) {
@@ -108,11 +124,6 @@ public class BlindService {
 
     @SneakyThrows
     private void publishBlindEvent(String blindName, String actionName) {
-        blindEvents.put(BlindEvent.builder().blindName(blindName).actionName(actionName).build());
-    }
-
-    @SneakyThrows
-    private void pullUnfinishedBlind(String blindName, String actionName) {
         blindEvents.put(BlindEvent.builder().blindName(blindName).actionName(actionName).build());
     }
 

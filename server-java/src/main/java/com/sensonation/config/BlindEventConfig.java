@@ -2,7 +2,6 @@ package com.sensonation.config;
 
 import com.sensonation.application.*;
 import com.sensonation.domain.BlindEvent;
-import org.springframework.cloud.context.restart.RestartEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -23,18 +22,16 @@ public class BlindEventConfig {
         return new BlindActionsExecutor(blindDriversProvider);
     }
 
-
     @Bean
-    public ActionsExecutor blindLimitSwitchesActionExecutor(BlindUnfinishedPullingService blindUnfinishedPullingService) {
-        return new BlindLimitSwitchActionsExecutor(blindUnfinishedPullingService);
+    public ActionsExecutor timeoutActionsExecutor(BlindStopperService blindStopperService){
+        return new TimeoutActionsExecutor(blindStopperService);
     }
 
     @Bean
     public BlindEventBus blindEventBus(TaskExecutor blindTaskExecutor,
                                        ArrayBlockingQueue<BlindEvent> blindEvents,
-                                       List<ActionsExecutor> actionsExecutors,
-                                       RestartEndpoint restartEndpoint) {
-        return new BlindEventBus(blindTaskExecutor, blindEvents, actionsExecutors, 299, restartEndpoint);
+                                       List<ActionsExecutor> actionsExecutors) {
+        return new BlindEventBus(blindTaskExecutor, blindEvents, actionsExecutors, 299);
     }
 
 }

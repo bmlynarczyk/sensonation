@@ -3,7 +3,8 @@ package com.sensonation.application;
 import com.google.common.collect.ImmutableMap;
 import com.sensonation.domain.BlindDriver;
 import com.sensonation.domain.BlindLimitSwitchState;
-import com.sensonation.domain.McpInput;
+import com.sensonation.domain.CustomServoBlindDriver;
+import com.sensonation.domain.BlindLimitSwitch;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,12 +19,12 @@ import static org.mockito.Mockito.*;
 
 public class BlindLimitSwitchCheckingServiceTest {
 
-    private final McpInput pullDownLimitSwitch = mock(McpInput.class);
-    private final McpInput pullUpLimitSwitch = mock(McpInput.class);
+    private final BlindLimitSwitch pullDownLimitSwitch = mock(BlindLimitSwitch.class);
+    private final BlindLimitSwitch pullUpLimitSwitch = mock(BlindLimitSwitch.class);
     private final BlindDriversProvider blindDriversProvider = mock(BlindDriversProvider.class);
     private final TaskExecutor taskExecutor = mock(TaskExecutor.class);
 
-    private final BlindDriver blindDriver = BlindDriver.builder()
+    private final BlindDriver blindDriver = CustomServoBlindDriver.builder()
             .name("a")
             .firstOutput(null)
             .secondOutput(null)

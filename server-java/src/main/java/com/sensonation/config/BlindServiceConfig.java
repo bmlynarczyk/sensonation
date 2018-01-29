@@ -5,6 +5,7 @@ import com.sensonation.domain.BlindEvent;
 import com.sensonation.domain.ManagedBlindsProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.TaskExecutor;
 
 import java.time.Clock;
@@ -19,12 +20,7 @@ public class BlindServiceConfig {
     }
 
     @Bean
-    public BlindUnfinishedPullingService blindUnfinishedPullingService(BlindLimitSwitchCheckingService blindLimitSwitchCheckingService,
-                                                                       BlindService blindService) {
-        return new BlindUnfinishedPullingService(blindLimitSwitchCheckingService, blindService);
-    }
-
-    @Bean
+    @Profile("prod")
     public BlindLimitSwitchCheckingService blindLimitSwitchCheckingService(BlindDriversProvider blindDriversProvider,
                                                                            TaskExecutor blindTaskExecutor) {
         return new BlindLimitSwitchCheckingService(blindDriversProvider, Clock.systemDefaultZone(), blindTaskExecutor);
