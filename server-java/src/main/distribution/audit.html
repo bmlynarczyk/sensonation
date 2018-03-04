@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Sensonation Audit</title>
+  <meta name="description" content="Sensonation Audit">
+  <meta name="author" content="bmlynarczyk">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style type="text/css">
+	body {
+		background-color: #222222;
+	}
+  	li {
+		font-family: monospace;
+		font-size: 13px;
+		font-weight: bold;
+		color: #5b7fa6;
+	}
+	ul {
+		list-style-type: none;
+		padding: 5px;
+	}
+  </style>
+</head>
+
+<body>
+
+	<ul id="logs">
+	</ul>
+
+	<script>
+
+		$.get({url: "../logs/sensonation-audit.log", cache: false})
+		.then(function( data ) {
+			data.trim().split("\n").reverse().forEach(function(element){
+				$('ul').append(
+				    $('<li>').append($('<span>').append(/(\d\d\d\d-\d\d-\d\d)(.*)/.exec(element)[2])));
+			});
+		});
+
+	</script>
+</body>
+</html>
